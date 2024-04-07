@@ -15,7 +15,7 @@ interface RecipeDao {
             "JOIN RecipeIngredient ri ON ri.rid = r.rid " +
             "JOIN Ingredient i ON i.iid = ri.iid " +
             "JOIN Measurement m ON m.mid = ri.mid " +
-            "WHERE r.rid LIKE :recipeID")
+            "WHERE r.rid = :recipeID")
     fun getRecipe(recipeID: Long)
 
     @Insert
