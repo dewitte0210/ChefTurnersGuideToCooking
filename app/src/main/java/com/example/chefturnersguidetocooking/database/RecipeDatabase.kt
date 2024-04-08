@@ -12,9 +12,9 @@ import androidx.room.RoomDatabase
 abstract class RecipeDatabase() : RoomDatabase() {
     // Dao objects for the database
     abstract fun RecipeDao() : RecipeDao
-    abstract fun RecipeIngredientDao() : RecipeDao
+    abstract fun RecipeIngredientDao() : RecipeIngredientDao
     abstract fun MeasurementDao() : MeasurementDao
-    abstract fun IngredientDao() : Ingredient
+    abstract fun IngredientDao() : IngredientDao
 
     companion object {
         private var instance: RecipeDatabase? = null
