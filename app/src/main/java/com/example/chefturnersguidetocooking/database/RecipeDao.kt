@@ -16,7 +16,7 @@ interface RecipeDao {
             "JOIN Ingredient i ON i.iid = ri.iid " +
             "JOIN Measurement m ON m.mid = ri.mid " +
             "WHERE r.rid = :recipeID")
-    fun getRecipe(recipeID: Long)
+    fun getRecipe(recipeID: Long): Flow<List<Recipe>>
 
     @Insert
     suspend fun insertRecipe(rec: Recipe)
