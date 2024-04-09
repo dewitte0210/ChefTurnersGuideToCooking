@@ -10,6 +10,8 @@ data class Recipe(
     val rid : Long,
     @ColumnInfo(name = "name")
     val name: String,
+    @ColumnInfo(name = "origin")
+    val origin: String,
     @ColumnInfo(name = "favorite")
     val favorite: Boolean,
     @ColumnInfo(name = "image")
