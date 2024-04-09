@@ -5,7 +5,17 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName="RecipeIngredient",
+    primaryKeys = ["rid", "iid"],
+    foreignKeys = [
+        ForeignKey(entity = Recipe::class,
+            parentColumns = ["rid"],
+            childColumns = ["iid"]),
+        ForeignKey(entity = Ingredient::class,
+            parentColumns = ["iid"],
+            childColumns = ["iid"])
+    ]
+)
 data class RecipeIngredient(
     val rid: Long,
     val iid: Long,
