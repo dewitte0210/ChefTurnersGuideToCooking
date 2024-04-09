@@ -17,7 +17,7 @@ interface DatabaseRepositoryInterface {
 
     //Recipe Queries
     fun getAllRecipes(): Flow<List<Recipe>>
-    fun getRecipe(recipeID: Long)
+    fun getRecipe(recipeID: Long): Flow<List<Recipe>>
     suspend fun insertRecipe(rec: Recipe)
     suspend fun deleteRecipe(rec: Recipe)
 

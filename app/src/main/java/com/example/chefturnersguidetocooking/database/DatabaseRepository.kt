@@ -31,7 +31,7 @@ class DatabaseRepository (
     //Recipe Queries
     override fun getAllRecipes(): Flow<List<Recipe>>
     = recipeDao.getAllRecipes()
-    override fun getRecipe(recipeID: Long)
+    override fun getRecipe(recipeID: Long): Flow<List<Recipe>>
     = recipeDao.getRecipe(recipeID)
     override suspend fun insertRecipe(rec: Recipe)
     = recipeDao.insertRecipe(rec)
