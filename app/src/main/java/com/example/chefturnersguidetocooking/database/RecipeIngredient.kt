@@ -5,8 +5,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
+
 @Entity(tableName="RecipeIngredient",
-    primaryKeys = ["rid", "iid"],
+    primaryKeys = ["rid", "iid", "mid"],
     foreignKeys = [
         ForeignKey(entity = Recipe::class,
             parentColumns = ["rid"],
