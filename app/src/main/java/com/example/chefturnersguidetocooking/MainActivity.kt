@@ -10,11 +10,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.chefturnersguidetocooking.database.DatabaseRepository
+import com.example.chefturnersguidetocooking.database.DatabaseViewModel
+import com.example.chefturnersguidetocooking.database.RecipeDatabase
 import com.example.chefturnersguidetocooking.ui.theme.ChefTurnersGuideToCookingTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val database = RecipeDatabase.getInstance(applicationContext)
+        val repository = DatabaseRepository.getRepository(database)
+        val dbViewModel = DatabaseViewModel(repository)
         setContent {
             ChefTurnersGuideToCookingTheme {
                 // A surface container using the 'background' color from the theme
