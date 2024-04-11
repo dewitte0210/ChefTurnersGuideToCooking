@@ -13,7 +13,10 @@ import androidx.room.PrimaryKey
             childColumns = ["rid"]),
         ForeignKey(entity = Ingredient::class,
             parentColumns = ["iid"],
-            childColumns = ["iid"])
+            childColumns = ["iid"]),
+        ForeignKey(entity = Measurement::class,
+            parentColumns = ["mid"],
+            childColumns = ["mid"])
     ]
 )
 data class RecipeIngredient(
