@@ -25,4 +25,9 @@ interface DatabaseRepositoryInterface {
     fun getAllRecipeIngredients(): Flow<List<RecipeIngredient>>
     suspend fun insertRecipeIngredient(recIng: RecipeIngredient)
     suspend fun deleteRecipeIngredient(recIng: RecipeIngredient)
+
+    //DishType Queries
+    fun getAllRecipeDishTypes(): Flow<List<RecipeDishType>>
+    suspend fun insertRecipeDishType(dishType: RecipeDishType)
+    suspend fun deleteRecipeDishType(dishType: RecipeDishType)
 }

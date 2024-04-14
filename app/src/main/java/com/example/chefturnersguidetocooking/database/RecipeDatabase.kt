@@ -15,7 +15,7 @@ abstract class RecipeDatabase() : RoomDatabase() {
     abstract fun RecipeIngredientDao() : RecipeIngredientDao
     abstract fun MeasurementDao() : MeasurementDao
     abstract fun IngredientDao() : IngredientDao
-
+    abstract fun RecipeDishTypeDao() : RecipeDishTypeDao
     //Singleton to create a database instance
     companion object {
         private var instance: RecipeDatabase? = null

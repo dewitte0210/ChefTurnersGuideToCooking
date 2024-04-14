@@ -6,7 +6,8 @@ class DatabaseRepository (
     val ingredientDao: IngredientDao,
     val measurementDao: MeasurementDao,
     val recipeDao: RecipeDao,
-    val recipeIngredientDao: RecipeIngredientDao
+    val recipeIngredientDao: RecipeIngredientDao,
+    val recipeDishTypeDao: RecipeDishTypeDao
 ): DatabaseRepositoryInterface {
     //Ingredient Queries
     override fun getAllIngredients(): Flow<List<Ingredient>>
@@ -46,6 +47,15 @@ class DatabaseRepository (
     override suspend fun deleteRecipeIngredient(recIng: RecipeIngredient)
     = recipeIngredientDao.deleteRecipeIngredient(recIng)
 
+    //Dish Type Queries
+    override fun getAllRecipeDishTypes(): Flow<List<RecipeDishType>>
+    = recipeDishTypeDao.getAllRecipeDishTypes()
+    override suspend fun insertRecipeDishType(dishType: RecipeDishType)
+    = recipeDishTypeDao.insertRecipeDishType(dishType)
+
+    override suspend fun deleteRecipeDishType(dishType: RecipeDishType)
+    = recipeDishTypeDao.deleteRecipeDishType(dishType)
+
     companion object {
         private var repository: DatabaseRepositoryInterface? = null
         fun getRepository(recipeDatabase: RecipeDatabase):
@@ -55,7 +65,8 @@ class DatabaseRepository (
                     recipeDatabase.IngredientDao(),
                     recipeDatabase.MeasurementDao(),
                     recipeDatabase.RecipeDao(),
-                    recipeDatabase.RecipeIngredientDao()
+                    recipeDatabase.RecipeIngredientDao(),
+                    recipeDatabase.RecipeDishTypeDao()
                 ) }
             return repository!!
         } }

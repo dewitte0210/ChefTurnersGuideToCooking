@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class DishType(
     @PrimaryKey(autoGenerate = true)
-    val dtid: Long,
+    val dtid: Long = 0,
     @ColumnInfo(name = "name")
     val name: String
 )

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class Ingredient(
     @PrimaryKey(autoGenerate = true)
-        val iid: Long,
+        val iid: Long = 0,
     @ColumnInfo(name = "name")
         val name: String
 )
