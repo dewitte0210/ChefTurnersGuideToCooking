@@ -7,7 +7,8 @@ class DatabaseRepository (
     val measurementDao: MeasurementDao,
     val recipeDao: RecipeDao,
     val recipeIngredientDao: RecipeIngredientDao,
-    val recipeDishTypeDao: RecipeDishTypeDao
+    val recipeDishTypeDao: RecipeDishTypeDao,
+    val dishTypeDao: DishTypeDao
 ): DatabaseRepositoryInterface {
     //Ingredient Queries
     override fun getAllIngredients(): Flow<List<Ingredient>>
@@ -47,14 +48,23 @@ class DatabaseRepository (
     override suspend fun deleteRecipeIngredient(recIng: RecipeIngredient)
     = recipeIngredientDao.deleteRecipeIngredient(recIng)
 
-    //Dish Type Queries
+    //Recipe Dish Type Queries
     override fun getAllRecipeDishTypes(): Flow<List<RecipeDishType>>
     = recipeDishTypeDao.getAllRecipeDishTypes()
-    override suspend fun insertRecipeDishType(dishType: RecipeDishType)
-    = recipeDishTypeDao.insertRecipeDishType(dishType)
+    override suspend fun insertRecipeDishType(recipeDishType: RecipeDishType)
+    = recipeDishTypeDao.insertRecipeDishType(recipeDishType)
+    override suspend fun deleteRecipeDishType(recipeDishType: RecipeDishType)
+    = recipeDishTypeDao.deleteRecipeDishType(recipeDishType)
 
-    override suspend fun deleteRecipeDishType(dishType: RecipeDishType)
-    = recipeDishTypeDao.deleteRecipeDishType(dishType)
+    //DishType Queries
+    override fun getAllTypes(): Flow<List<DishType>>
+    = dishTypeDao.getAllTypes()
+    override fun getType(typeName: String): Flow<List<DishType>>
+    = dishTypeDao.getType(typeName)
+    override suspend fun insertType(dishType: DishType)
+    = dishTypeDao.insertType(dishType)
+    override suspend fun deleteType(dishType: DishType)
+    = dishTypeDao.deleteType(dishType)
 
     companion object {
         private var repository: DatabaseRepositoryInterface? = null
@@ -66,7 +76,8 @@ class DatabaseRepository (
                     recipeDatabase.MeasurementDao(),
                     recipeDatabase.RecipeDao(),
                     recipeDatabase.RecipeIngredientDao(),
-                    recipeDatabase.RecipeDishTypeDao()
+                    recipeDatabase.RecipeDishTypeDao(),
+                    recipeDatabase.DishTypeDao()
                 ) }
             return repository!!
         } }

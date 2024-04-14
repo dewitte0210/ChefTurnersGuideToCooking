@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [Recipe::class, RecipeIngredient::class, Measurement::class, Ingredient::class],
+    entities = [Recipe::class, RecipeIngredient::class, Measurement::class, Ingredient::class, DishType::class, RecipeDishType::class],
     version = 1
 )
 abstract class RecipeDatabase() : RoomDatabase() {
@@ -16,6 +16,7 @@ abstract class RecipeDatabase() : RoomDatabase() {
     abstract fun MeasurementDao() : MeasurementDao
     abstract fun IngredientDao() : IngredientDao
     abstract fun RecipeDishTypeDao() : RecipeDishTypeDao
+    abstract fun DishTypeDao() : DishTypeDao
     //Singleton to create a database instance
     companion object {
         private var instance: RecipeDatabase? = null
