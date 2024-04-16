@@ -1,3 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ChefTurnersGuideToCooking</string>
+    <string name="app_name">Chef Turner Cooking Guide</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="list_fragment_label">Recipes</string>
+    <string name="detail_fragment_label">Recipe Info</string>
+    <string name="testing">Test</string>
+    <string name="recipe_list_subtitle">empty data from now, we will link the database here</string>
+    <string name="recipe_detail_text">
+        This is a random recipes just to show example
+---------------------------------------------------------------------
+        Prep Time: 30 minutes
+---------------------------------------------------------------------
+        Ingredients:
+        - 200g spaghetti
+        - 2 large eggs
+        - 50g pecorino cheese
+        - 50g pancetta
+        - 2 cloves garlic
+---------------------------------------------------------------------
+        Steps:
+        1. Cook spaghetti in a pot of salted boiling water according to package instructions until al dente.
+        2. In a mixing bowl, whisk together eggs and grated pecorino cheese until well combined. Set aside.
+        3. In a separate pan, cook diced pancetta until crispy. Add minced garlic and cook until fragrant.
+        4. Once spaghetti is cooked, drain it and add it to the pan with pancetta and garlic. Remove from heat.
+        5. Quickly pour the egg and cheese mixture over the hot spaghetti and toss everything together until the sauce thickens and coats the pasta evenly.
+        6. Serve immediately, garnished with additional grated pecorino cheese and freshly ground black pepper, if desired.
+    </string>
+    <string name="back_button">Back</string>
 </resources>
