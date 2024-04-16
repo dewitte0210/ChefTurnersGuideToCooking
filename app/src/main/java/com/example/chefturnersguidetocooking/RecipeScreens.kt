@@ -3,6 +3,7 @@ package com.example.chefturnersguidetocooking
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -57,6 +59,12 @@ import com.example.chefturnersguidetocooking.data.ExamplesDataProvider
 import com.example.chefturnersguidetocooking.model.Recipes
 import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
 import com.example.chefturnersguidetocooking.RecipeContentType
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import com.example.chefturnersguidetocooking.RecipeViewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
+
 
 /**
  * Main composable that serves as container
@@ -66,6 +74,7 @@ import com.example.chefturnersguidetocooking.RecipeContentType
 fun RecipeApp(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
+    navController: NavController // Add NavController as a parameter
 ) {
     val viewModel: RecipeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -83,6 +92,16 @@ fun RecipeApp(
                 isShowingListPage = uiState.isShowingListPage,
                 onBackButtonClick = { viewModel.navigateToListPage() },
                 windowSize = windowSize
+            )
+        },
+        bottomBar = {
+            BottomNavigation(
+                items = listOf(
+                    BottomNavigationItem.Home,
+                    BottomNavigationItem.Favorites,
+                    BottomNavigationItem.AddRecipes
+                ),
+                onItemClick = { /* Handle item click */ }
             )
         }
     ) { innerPadding ->
@@ -163,6 +182,56 @@ fun RecipeAppBar(
         modifier = modifier,
     )
 }
+
+
+
+@Composable
+fun BottomNavigation(
+    modifier: Modifier = Modifier,
+    items: List<BottomNavigationItem>,
+    onItemClick: (BottomNavigationItem) -> Unit
+) {
+    Surface(
+        color = md_theme_light_primary, // Use your defined color here
+        contentColor = contentColorFor(md_theme_light_primary), // Optionally, you can customize content color
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            items.forEach { item ->
+                BottomNavigationItem(
+                    item = item,
+                    onClick = { onItemClick(item) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomNavigationItem(
+    item: BottomNavigationItem,
+    onClick: () -> Unit
+) {
+    // Customize this based on your UI design
+    Text(
+        text = item.label,
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    )
+}
+
+
+sealed class BottomNavigationItem(val route: String, val label: String) {
+    object Home : BottomNavigationItem("home", "Home")
+    object Favorites : BottomNavigationItem("favorites", "Favorites")
+    object AddRecipes : BottomNavigationItem("add_recipes", "Add Recipes")
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

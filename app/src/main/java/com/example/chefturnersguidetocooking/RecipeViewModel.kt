@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 /**
  * View Model for Sports app
  */
+
 class RecipeViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -47,3 +48,5 @@ data class RecipeUiState(
     val currentRecipes: Recipes = ExamplesDataProvider.defaultRecipe,
     val isShowingListPage: Boolean = true
 )
+
+
