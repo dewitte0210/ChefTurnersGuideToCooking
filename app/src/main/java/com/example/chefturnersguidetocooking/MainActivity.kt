@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.chefturnersguidetocooking.database.DatabaseRepository
 import com.example.chefturnersguidetocooking.database.DatabaseViewModel
 import com.example.chefturnersguidetocooking.database.RecipeDatabase
-import com.example.chefturnersguidetocooking.ui.theme.ChefTurnersGuideToCookingTheme
+//import com.example.chefturnersguidetocooking.ui.theme.ChefTurnersGuideToCookingTheme
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -60,7 +60,8 @@ class MainActivity : ComponentActivity() {
                     RecipeApp(
                         onBackPressed = onBackPressed,
                         windowSize = windowSize,
-                        navController = navController
+                        navController = navController,
+                        dbViewModel = dbViewModel
                     )
                 }
             }
