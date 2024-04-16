@@ -1,5 +1,6 @@
 package com.example.chefturnersguidetocooking.database
 
+import android.media.Image
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -56,12 +57,12 @@ class DatabaseViewModel(
     )
 
     //Inserts
-    fun insertRecipe(name: String, origin: String, favorite: Boolean, image: String,
+    fun insertRecipe(name: String, origin: String, favorite: Boolean, image: Image,
                      numCooked: Int, description: String, instructions: String, calories: Int,
-                     carbs: Int, fat: Int, protein: Int){
+                     carbs: Int, fat: Int, protein: Int, servings: Int){
         val recipe = Recipe(name = name, origin = origin, favorite = favorite, image = image,
             numCooked = numCooked, description = description, instructions = instructions,
-            calories = calories, carbs = carbs, fat = fat, protein = protein)
+            calories = calories, carbs = carbs, fat = fat, protein = protein, servings = servings)
         viewModelScope.launch{
             dbRepository.insertRecipe(recipe)
         }
