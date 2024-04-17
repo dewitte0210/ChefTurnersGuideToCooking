@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 /**
- * View Model for Sports app
+ * View Model for our recipes app
  */
 
 class RecipeViewModel : ViewModel() {

@@ -95,14 +95,7 @@ fun RecipeApp(
             )
         },
         bottomBar = {
-            BottomNavigation(
-                items = listOf(
-                    BottomNavigationItem.Home,
-                    BottomNavigationItem.Favorites,
-                    BottomNavigationItem.AddRecipes
-                ),
-                onItemClick = { /* Handle item click */ }
-            )
+            BottomNavigation(navController = navController)
         }
     ) { innerPadding ->
         if (contentType == RecipeContentType.ListAndDetail) {
@@ -139,7 +132,6 @@ fun RecipeApp(
         }
     }
 }
-
 /**
  * Composable that displays the topBar and displays back button if back navigation is possible.
  */
@@ -183,17 +175,14 @@ fun RecipeAppBar(
     )
 }
 
-
-
 @Composable
 fun BottomNavigation(
     modifier: Modifier = Modifier,
-    items: List<BottomNavigationItem>,
-    onItemClick: (BottomNavigationItem) -> Unit
+    navController: NavController
 ) {
     Surface(
-        color = md_theme_light_primary, // Use your defined color here
-        contentColor = contentColorFor(md_theme_light_primary), // Optionally, you can customize content color
+        color = md_theme_light_primary,
+        contentColor = contentColorFor(md_theme_light_primary),
         modifier = modifier
     ) {
         Row(
@@ -201,10 +190,14 @@ fun BottomNavigation(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            items.forEach { item ->
+            listOf(
+                BottomNavigationItem.Home,
+                BottomNavigationItem.AddRecipes,
+                BottomNavigationItem.Favorites
+            ).forEach { item ->
                 BottomNavigationItem(
                     item = item,
-                    onClick = { onItemClick(item) }
+                    onClick = { navController.navigate(item.route) }
                 )
             }
         }
@@ -228,8 +221,9 @@ fun BottomNavigationItem(
 
 sealed class BottomNavigationItem(val route: String, val label: String) {
     object Home : BottomNavigationItem("home", "Home")
-    object Favorites : BottomNavigationItem("favorites", "Favorites")
     object AddRecipes : BottomNavigationItem("add_recipes", "Add Recipes")
+    object Favorites : BottomNavigationItem("favorites", "Favorites")
+
 }
 
 
@@ -404,9 +398,7 @@ private fun RecipeListAndDetail(
         RecipesList(
             recipes = recipes,
             onClick = onClick,
-            contentPadding = PaddingValues(
-                top = contentPadding.calculateTopPadding(),
-            ),
+            contentPadding = contentPadding, // Use contentPadding here
             modifier = Modifier
                 .weight(2f)
                 .padding(horizontal = dimensionResource(R.dimen.padding_medium))
@@ -414,9 +406,7 @@ private fun RecipeListAndDetail(
         RecipesDetail(
             selectedRecipes = selectedRecipes,
             modifier = Modifier.weight(3f),
-            contentPadding = PaddingValues(
-                top = contentPadding.calculateTopPadding(),
-            ),
+            contentPadding = contentPadding, // Use contentPadding here
             onBackPressed = onBackPressed,
         )
     }

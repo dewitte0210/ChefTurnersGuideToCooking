@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Chef Turner Cooking Guide</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="list_fragment_label">Recipes</string>
+    <string name="list_fragment_label">Chef Turner Cooking Guide</string>
     <string name="detail_fragment_label">Recipe Info</string>
     <string name="testing">Test</string>
     <string name="recipe_list_subtitle">empty data from now, we will link the database here</string>
