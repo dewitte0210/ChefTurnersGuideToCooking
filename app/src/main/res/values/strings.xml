@@ -27,4 +27,13 @@
         6. Serve immediately, garnished with additional grated pecorino cheese and freshly ground black pepper, if desired.
     </string>
     <string name="back_button">Back</string>
+    <string name="recipe_name">Recipe Name</string>
+    <string name="recipe_origin">Recipe Origin</string>
+    <string name="recipe_description">Description</string>
+    <string name="recipe_instructions">Recipe Instructions</string>
+    <string name="calories">Calories</string>
+    <string name="carbs">Carbs</string>
+    <string name="fat">Fat</string>
+    <string name="protein">Protein</string>
+    <string name="add_a_new_recipe">Add a New Recipe</string>
 </resources>
