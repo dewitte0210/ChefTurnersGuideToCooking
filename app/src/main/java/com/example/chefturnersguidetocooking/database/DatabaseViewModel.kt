@@ -59,10 +59,12 @@ class DatabaseViewModel(
     //Inserts
     fun insertRecipe(name: String, origin: String, favorite: Boolean, image: Image,
                      numCooked: Int, description: String, instructions: String, calories: Int,
-                     carbs: Int, fat: Int, protein: Int, servings: Int){
+                     carbs: Int, fat: Int, protein: Int, servings: Int, cookTime: String,
+                     prepTime: String, totalTime: String){
         val recipe = Recipe(name = name, origin = origin, favorite = favorite, image = image,
             numCooked = numCooked, description = description, instructions = instructions,
-            calories = calories, carbs = carbs, fat = fat, protein = protein, servings = servings)
+            calories = calories, carbs = carbs, fat = fat, protein = protein, servings = servings,
+            cookTime = cookTime, prepTime = prepTime, totalTime = totalTime)
         viewModelScope.launch{
             dbRepository.insertRecipe(recipe)
         }
