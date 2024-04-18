@@ -17,7 +17,7 @@ data class Recipe(
     @ColumnInfo(name = "favorite")
     val favorite: Boolean,
     @ColumnInfo(name = "image")
-    val image: Image,
+    val image: String,
     @ColumnInfo(name = "num_cooked")
     val numCooked: Int,
     @ColumnInfo(name = "description")

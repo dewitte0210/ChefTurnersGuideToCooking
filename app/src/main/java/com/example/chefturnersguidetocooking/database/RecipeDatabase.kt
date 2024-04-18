@@ -27,6 +27,7 @@ abstract class RecipeDatabase() : RoomDatabase() {
                     RecipeDatabase::class.java,
                     "subShop_db"
                 )
+                    .createFromAsset("database/cooking_db.sql")
                     .fallbackToDestructiveMigration()
                     .build()
             }
