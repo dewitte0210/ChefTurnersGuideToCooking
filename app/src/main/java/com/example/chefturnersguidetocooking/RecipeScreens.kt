@@ -3,6 +3,7 @@ package com.example.chefturnersguidetocooking
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -58,6 +60,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.chefturnersguidetocooking.data.ExamplesDataProvider
 import com.example.chefturnersguidetocooking.model.Recipes
 import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
+import com.example.chefturnersguidetocooking.RecipeContentType
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import com.example.chefturnersguidetocooking.RecipeViewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
+
 
 /**
  * Main composable that serves as container
@@ -67,6 +76,7 @@ import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
 fun RecipeApp(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
+    navController: NavController // Add NavController as a parameter
 ) {
     val viewModel: RecipeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -85,6 +95,9 @@ fun RecipeApp(
                 onBackButtonClick = { viewModel.navigateToListPage() },
                 windowSize = windowSize
             )
+        },
+        bottomBar = {
+            BottomNavigation(navController = navController)
         }
     ) { innerPadding ->
         if (contentType == RecipeContentType.ListAndDetail) {
@@ -121,7 +134,6 @@ fun RecipeApp(
         }
     }
 }
-
 /**
  * Composable that displays the topBar and displays back button if back navigation is possible.
  */
@@ -187,6 +199,58 @@ fun RecipeAppBar(
         modifier = modifier,
     )
 }
+
+@Composable
+fun BottomNavigation(
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
+    Surface(
+        color = md_theme_light_primary,
+        contentColor = contentColorFor(md_theme_light_primary),
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            listOf(
+                BottomNavigationItem.Home,
+                BottomNavigationItem.AddRecipes,
+                BottomNavigationItem.Favorites
+            ).forEach { item ->
+                BottomNavigationItem(
+                    item = item,
+                    onClick = { navController.navigate(item.route) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomNavigationItem(
+    item: BottomNavigationItem,
+    onClick: () -> Unit
+) {
+    // Customize this based on your UI design
+    Text(
+        text = item.label,
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    )
+}
+
+
+sealed class BottomNavigationItem(val route: String, val label: String) {
+    object Home : BottomNavigationItem("home", "Home")
+    object AddRecipes : BottomNavigationItem("add_recipes", "Add Recipes")
+    object Favorites : BottomNavigationItem("favorites", "Favorites")
+
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -359,9 +423,7 @@ private fun RecipeListAndDetail(
         RecipesList(
             recipes = recipes,
             onClick = onClick,
-            contentPadding = PaddingValues(
-                top = contentPadding.calculateTopPadding(),
-            ),
+            contentPadding = contentPadding, // Use contentPadding here
             modifier = Modifier
                 .weight(2f)
                 .padding(horizontal = dimensionResource(R.dimen.padding_medium))
@@ -369,9 +431,7 @@ private fun RecipeListAndDetail(
         RecipesDetail(
             selectedRecipes = selectedRecipes,
             modifier = Modifier.weight(3f),
-            contentPadding = PaddingValues(
-                top = contentPadding.calculateTopPadding(),
-            ),
+            contentPadding = contentPadding, // Use contentPadding here
             onBackPressed = onBackPressed,
         )
     }
