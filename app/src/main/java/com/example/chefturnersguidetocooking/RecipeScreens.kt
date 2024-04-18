@@ -21,6 +21,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -57,6 +61,9 @@ import com.example.chefturnersguidetocooking.data.ExamplesDataProvider
 import com.example.chefturnersguidetocooking.model.Recipes
 import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
 import com.example.chefturnersguidetocooking.RecipeContentType
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 /**
  * Main composable that serves as container
@@ -77,11 +84,17 @@ fun RecipeApp(
         else -> RecipeContentType.ListOnly
     }
 
+    //Callback function for the favorite butt
+
+
     Scaffold(
         topBar = {
             RecipeAppBar(
                 isShowingListPage = uiState.isShowingListPage,
                 onBackButtonClick = { viewModel.navigateToListPage() },
+                buttonClick = {
+
+                },
                 windowSize = windowSize
             )
         }
@@ -128,10 +141,22 @@ fun RecipeApp(
 @Composable
 fun RecipeAppBar(
     onBackButtonClick: () -> Unit,
+    buttonClick: () -> Unit,
     isShowingListPage: Boolean,
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
+    var checked by remember { mutableStateOf(true) }
+    val icon: (@Composable () -> Unit)? = if (checked) {
+        {
+            Icon(
+                imageVector = Icons.Filled.FavoriteBorder,
+                contentDescription = stringResource(R.string.fav_button)
+            )
+        }
+    } else {
+        null
+    }
     val isShowingDetailPage = windowSize != WindowWidthSizeClass.Expanded && !isShowingListPage
     TopAppBar(
         title = {
@@ -153,6 +178,18 @@ fun RecipeAppBar(
                         contentDescription = stringResource(R.string.back_button)
                     )
                 }
+
+            }
+        } else {
+            { Box {} }
+        },
+        actions = if (isShowingDetailPage) {
+            {
+                Switch(
+                    checked = checked,
+                    onCheckedChange = { checked = it },
+                    thumbContent = icon
+                )
             }
         } else {
             { Box {} }
