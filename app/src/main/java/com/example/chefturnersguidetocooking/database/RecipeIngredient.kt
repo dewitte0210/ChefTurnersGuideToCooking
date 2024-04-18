@@ -24,5 +24,7 @@ data class RecipeIngredient(
     val iid: Long,
     val mid: Long,
     @ColumnInfo(name = "amount")
-        val amount: Double
+    val amount: Double,
+    @ColumnInfo(name = "prepared")
+    val prepared: String
 )

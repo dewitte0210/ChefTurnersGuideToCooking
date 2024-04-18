@@ -33,5 +33,11 @@ data class Recipe(
     @ColumnInfo(name = "fat")
     val fat: Int,
     @ColumnInfo(name = "protein")
-    val protein: Int
+    val protein: Int,
+    @ColumnInfo(name = "prep_time")
+    val prepTime: String,
+    @ColumnInfo(name = "cook_time")
+    val cookTime: String,
+    @ColumnInfo(name = "total_time")
+    val totalTime: String
 )
