@@ -5,11 +5,13 @@ import android.media.Image
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.sql.Blob
@@ -23,6 +25,7 @@ class DatabaseViewModel(
         dbRepository = repository
     }
 
+    private val _dbState = MutableStateFlow(DatabaseState())
     private val _recipes = dbRepository.getAllRecipes().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -43,14 +46,28 @@ class DatabaseViewModel(
         started = SharingStarted.WhileSubscribed(),
         initialValue = listOf()
     )
-    private val _dbState = MutableStateFlow(DatabaseState())
-    val dbState: StateFlow<DatabaseState> = combine(_dbState, _recipes, _ingredients, _measurements, _dishTypes)
-    {dbState, recipes, ingredients, measurements, dishTypes ->
+    private val _curRid = MutableStateFlow(_dbState.value.curRid)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val _curRecipe = _curRid.flatMapLatest{ curRid ->
+        dbRepository.getSingleRecipe(curRid)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = SingleRecipeAllInfo(null,null,null,null)
+    )
+    val dbState: StateFlow<DatabaseState> = combine(
+        combine( _recipes, _ingredients, _measurements, ::Triple),
+        combine(_dishTypes, _curRid, _curRecipe, ::Triple),
+        _dbState)
+    {t1, t2, dbState->
         dbState.copy(
-            recipes = recipes,
-            ingredients = ingredients,
-            measurements = measurements,
-            dishTypes = dishTypes
+            recipes = t1.first,
+            ingredients = t1.second,
+            measurements = t1.third,
+            dishTypes = t2.first,
+            curRid = t2.second,
+            curRecipe = t2.third
         )
     }.stateIn(
         scope = viewModelScope,
@@ -83,7 +100,11 @@ class DatabaseViewModel(
             dbRepository.insertMeasurement(measurement)
         }
     }
-    /*
+
+    fun updateCurRid(id: Long){
+        _curRid.value = id
+    }
+   /*
     fun insertDishType(name: String){
         val dishType = RecipeDishType(name = name)
         viewModelScope.launch {
