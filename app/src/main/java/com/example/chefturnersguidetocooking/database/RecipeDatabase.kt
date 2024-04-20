@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 @Database(
     entities = [Recipe::class, RecipeIngredient::class, Measurement::class, Ingredient::class, DishType::class, RecipeDishType::class],
     version = 1
 )
+@TypeConverters(Converters::class)
 abstract class RecipeDatabase() : RoomDatabase() {
     // Dao objects for the database
     abstract fun RecipeDao() : RecipeDao
@@ -27,7 +29,7 @@ abstract class RecipeDatabase() : RoomDatabase() {
                     RecipeDatabase::class.java,
                     "subShop_db"
                 )
-                    .createFromAsset("database/cooking_db.sql")
+                    //.createFromAsset("database/cooking_db_file.db")
                     .fallbackToDestructiveMigration()
                     .build()
             }

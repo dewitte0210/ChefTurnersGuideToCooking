@@ -20,11 +20,11 @@ import androidx.room.ForeignKey
     ]
 )
 data class RecipeIngredient(
-    val rid: Long,
-    val iid: Long,
-    val mid: Long,
+    val rid: Long?,
+    val iid: Long?,
+    val mid: Long?,
     @ColumnInfo(name = "amount")
-    val amount: Double,
+    val amount: Double?,
     @ColumnInfo(name = "prepared")
-    val prepared: String
+    val prepared: String?
 )

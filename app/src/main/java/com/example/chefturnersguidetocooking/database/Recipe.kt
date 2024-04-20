@@ -1,5 +1,6 @@
 package com.example.chefturnersguidetocooking.database
 
+import android.graphics.Bitmap
 import android.media.Image
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -11,33 +12,33 @@ data class Recipe(
     @PrimaryKey(autoGenerate = true)
     val rid : Long = 0,
     @ColumnInfo(name = "name")
-    val name: String,
+    val name: String?,
     @ColumnInfo(name = "origin")
-    val origin: String,
+    val origin: String?,
     @ColumnInfo(name = "favorite")
-    val favorite: Boolean,
+    val favorite: Boolean = false,
     @ColumnInfo(name = "image")
-    val image: String,
+    val image: Bitmap?,
     @ColumnInfo(name = "num_cooked")
-    val numCooked: Int,
+    val numCooked: Int = 0,
     @ColumnInfo(name = "description")
-    val description: String,
+    val description: String?,
     @ColumnInfo(name = "instructions")
-    val instructions: String,
+    val instructions: String?,
     @ColumnInfo(name = "servings")
-    val servings: Int,
+    val servings: Int?,
     @ColumnInfo(name = "calories")
-    val calories: Int,
+    val calories: Int?,
     @ColumnInfo(name = "carbs")
-    val carbs: Int,
+    val carbs: Int?,
     @ColumnInfo(name = "fat")
-    val fat: Int,
+    val fat: Int?,
     @ColumnInfo(name = "protein")
-    val protein: Int,
+    val protein: Int?,
     @ColumnInfo(name = "prep_time")
-    val prepTime: String,
+    val prepTime: String?,
     @ColumnInfo(name = "cook_time")
-    val cookTime: String,
+    val cookTime: String?,
     @ColumnInfo(name = "total_time")
-    val totalTime: String
+    val totalTime: String?
 )

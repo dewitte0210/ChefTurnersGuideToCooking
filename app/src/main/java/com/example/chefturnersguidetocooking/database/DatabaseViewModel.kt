@@ -1,5 +1,6 @@
 package com.example.chefturnersguidetocooking.database
 
+import android.graphics.Bitmap
 import android.media.Image
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.sql.Blob
 
 class DatabaseViewModel(
     repository: DatabaseRepositoryInterface
@@ -57,7 +59,7 @@ class DatabaseViewModel(
     )
 
     //Inserts
-    fun insertRecipe(name: String, origin: String, favorite: Boolean, image: String,
+    fun insertRecipe(name: String, origin: String, favorite: Boolean, image: Bitmap,
                      numCooked: Int, description: String, instructions: String, calories: Int,
                      carbs: Int, fat: Int, protein: Int, servings: Int, prepTime: String, cookTime: String, totalTime: String){
         val recipe = Recipe(name = name, origin = origin, favorite = favorite, image = image,
