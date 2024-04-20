@@ -21,6 +21,6 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecipeDishType(
-    val rid: Long?,
-    val dtid: Long?
+    val rid: Long,
+    val dtid: Long
 )

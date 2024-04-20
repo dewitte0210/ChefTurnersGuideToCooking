@@ -30,7 +30,7 @@ abstract class RecipeDatabase() : RoomDatabase() {
                     RecipeDatabase::class.java,
                     "recipe_db"
                 )
-                    //.createFromAsset("database/cooking_db_file.db")
+                    .createFromAsset("database/cookingApp_db.db")
                     .fallbackToDestructiveMigration()
                     .build()
             }

@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 
 
 @Entity(tableName="RecipeIngredient",
-    primaryKeys = ["rid", "iid", "mid"],
+    primaryKeys = ["rid", "iid"],
     foreignKeys = [
         ForeignKey(entity = Recipe::class,
             parentColumns = ["rid"],
@@ -20,8 +20,8 @@ import androidx.room.ForeignKey
     ]
 )
 data class RecipeIngredient(
-    val rid: Long?,
-    val iid: Long?,
+    val rid: Long,
+    val iid: Long,
     val mid: Long?,
     @ColumnInfo(name = "amount")
     val amount: Double?,

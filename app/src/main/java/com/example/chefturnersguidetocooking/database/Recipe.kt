@@ -2,6 +2,7 @@ package com.example.chefturnersguidetocooking.database
 
 import android.graphics.Bitmap
 import android.media.Image
+import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,6 +10,7 @@ import java.sql.Blob
 
 @Entity
 data class Recipe(
+    @NonNull
     @PrimaryKey(autoGenerate = true)
     val rid : Long = 0,
     @ColumnInfo(name = "name")

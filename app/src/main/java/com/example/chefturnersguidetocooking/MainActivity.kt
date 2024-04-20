@@ -40,6 +40,8 @@ class MainActivity : ComponentActivity() {
         val database = RecipeDatabase.getInstance(applicationContext)
         val repository = DatabaseRepository.getRepository(database)
         val dbViewModel = DatabaseViewModel(repository)
+        val cursor = database.query("PRAGMA wal_checkpoint", arrayOf())
+        cursor.moveToFirst()
         setContent {
             RecipeTheme {
                 val layoutDirection = LocalLayoutDirection.current
