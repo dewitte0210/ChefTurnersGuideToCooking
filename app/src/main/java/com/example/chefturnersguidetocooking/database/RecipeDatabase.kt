@@ -28,7 +28,7 @@ abstract class RecipeDatabase() : RoomDatabase() {
                 instance = Room.databaseBuilder(
                     context,
                     RecipeDatabase::class.java,
-                    "subShop_db"
+                    "recipe_db"
                 )
                     //.createFromAsset("database/cooking_db_file.db")
                     .fallbackToDestructiveMigration()
