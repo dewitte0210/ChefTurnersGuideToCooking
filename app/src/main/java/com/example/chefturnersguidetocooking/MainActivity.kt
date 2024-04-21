@@ -15,6 +15,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.chefturnersguidetocooking.database.DatabaseRepository
+import com.example.chefturnersguidetocooking.database.DatabaseViewModel
+import com.example.chefturnersguidetocooking.database.RecipeDatabase
+//import com.example.chefturnersguidetocooking.ui.theme.ChefTurnersGuideToCookingTheme
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -31,6 +37,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        val database = RecipeDatabase.getInstance(applicationContext)
+        val repository = DatabaseRepository.getRepository(database)
+        val dbViewModel = DatabaseViewModel(repository)
+        val cursor = database.query("PRAGMA wal_checkpoint", arrayOf())
+        cursor.moveToFirst()
         setContent {
             RecipeTheme {
                 val layoutDirection = LocalLayoutDirection.current
@@ -51,7 +62,8 @@ class MainActivity : ComponentActivity() {
                     RecipeApp(
                         onBackPressed = onBackPressed,
                         windowSize = windowSize,
-                        navController = navController
+                        navController = navController,
+                        dbViewModel = dbViewModel
                     )
                 }
             }
