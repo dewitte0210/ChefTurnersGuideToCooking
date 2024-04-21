@@ -6,6 +6,5 @@ data class DatabaseState(
     val measurements: List<Measurement> = listOf(),
     val dishTypes: List<RecipeDishType> = listOf(),
     val curRid: Long = 0,
-    val curRecipe: SingleRecipeAllInfo = SingleRecipeAllInfo(null,null,
-        null,null)
+    val curRecipe: SingleRecipeAllInfo? = null
 )

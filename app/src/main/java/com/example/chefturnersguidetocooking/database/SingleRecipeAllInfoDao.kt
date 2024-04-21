@@ -2,11 +2,12 @@ package com.example.chefturnersguidetocooking.database
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SingleRecipeAllInfoDao {
-
+    @Transaction
     @Query("SELECT * FROM Recipe r " +
             "JOIN RecipeIngredient ri ON ri.rid = r.rid " +
             "JOIN Ingredient i ON i.iid = ri.iid " +

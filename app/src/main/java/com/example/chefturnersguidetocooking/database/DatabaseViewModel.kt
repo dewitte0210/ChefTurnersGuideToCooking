@@ -54,7 +54,7 @@ class DatabaseViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
-        initialValue = SingleRecipeAllInfo(null,null,null,null)
+        initialValue = SingleRecipeAllInfo(null,null,null)
     )
     val dbState: StateFlow<DatabaseState> = combine(
         combine( _recipes, _ingredients, _measurements, ::Triple),

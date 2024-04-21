@@ -18,19 +18,7 @@ data class SingleRecipeAllInfo(
             entityColumn = "iid"
         )
     )
-    val ingredients: List<Ingredient>?,
-
-    @Relation(
-       parentColumn = "iid",
-        entity = Measurement::class,
-        entityColumn = "mid",
-        associateBy = Junction(
-            value = RecipeIngredient::class,
-            parentColumn = "iid",
-            entityColumn = "mid"
-        )
-    )
-    val measurements: List<Measurement>?,
+    val ingredients: List<IngredientWithMeasurement>?,
 
     @Relation(
         parentColumn = "rid",
