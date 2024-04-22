@@ -40,6 +40,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -86,7 +88,6 @@ fun AddingView() {
             )
             AddRecipeInput(
                 label = R.string.recipe_name,
-                //leadingIcon = R.drawable.percent,
                 value = nameInput,
                 onValueChanged = { nameInput = it },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -102,6 +103,11 @@ fun AddingView() {
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
                     .padding(bottom = 16.dp),
+                /**
+                 * This is where we would add the ability
+                 * to add an image for the recipe, but for now
+                 * it's just the chef
+                 */
                 onClick = { /*TODO*/ }
             ) {
                 Image(
@@ -114,7 +120,6 @@ fun AddingView() {
             }
             AddRecipeInput(
                 label = R.string.recipe_origin,
-                //leadingIcon = R.drawable.percent,
                 value = originInput,
                 onValueChanged = { originInput = it },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -127,7 +132,6 @@ fun AddingView() {
             )
             AddRecipeInput(
                 label = R.string.recipe_description,
-                //leadingIcon = R.drawable.percent,
                 value = descriptionInput,
                 onValueChanged = { descriptionInput = it },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -150,7 +154,6 @@ fun AddingView() {
             ) {
                 AddRecipeInput(
                     label = R.string.calories,
-                    //leadingIcon = R.drawable.percent,
                     value = calorieInput,
                     onValueChanged = { calorieInput = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -162,14 +165,12 @@ fun AddingView() {
                 )
                 AddRecipeInput(
                     label = R.string.carbs,
-                    //leadingIcon = R.drawable.percent,
                     value = carbInput,
                     onValueChanged = { carbInput = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Next
                     ),
-                    //horizontalAlignment = Alignment.CenterEnd,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -180,7 +181,6 @@ fun AddingView() {
             ) {
                 AddRecipeInput(
                     label = R.string.fat,
-                    //leadingIcon = R.drawable.percent,
                     value = fatInput,
                     onValueChanged = { fatInput = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -192,7 +192,6 @@ fun AddingView() {
                 )
                 AddRecipeInput(
                     label = R.string.protein,
-                    //leadingIcon = R.drawable.percent,
                     value = proteinInput,
                     onValueChanged = { proteinInput = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -247,6 +246,11 @@ fun RecipeInstructions(
 ) {
     var steps by remember { mutableIntStateOf(1) }
     var instructionsInput by remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
+
+    if( steps < 1){
+        steps = 1
+    }
 
     Text(
         text = stringResource(R.string.recipe_instructions),
@@ -273,7 +277,7 @@ fun RecipeInstructions(
                         steps--
                         instructionList.remove(instruction)
                     }
-                    true
+                    false
                 }
             )
             SwipeToDismiss(
@@ -310,13 +314,13 @@ fun RecipeInstructions(
 
     AddInstructionsStep(
         stepNum = steps,
-        //leadingIcon = R.drawable.percent,
         value = instructionsInput,
         onValueChanged = { instructionsInput = it },
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         ),
+        focusRequester = focusRequester,
         modifier = Modifier
             .padding(bottom = 16.dp)
             .fillMaxWidth()
@@ -327,6 +331,7 @@ fun RecipeInstructions(
                 instructionList.add(Instruction(steps++, instructionsInput))
                 instructionsInput = ""
             }
+            focusRequester.requestFocus()
         },
         modifier = Modifier
             .padding(bottom = 16.dp)
@@ -366,6 +371,7 @@ fun AddInstructionsStep(
     value: String,
     onValueChanged: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
+    focusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
@@ -378,7 +384,7 @@ fun AddInstructionsStep(
         singleLine = true,
         label = { Text("Step $stepNum") },
         keyboardOptions = keyboardOptions,
-        modifier = modifier
+        modifier = modifier.focusRequester(focusRequester)
     )
 }
 
@@ -389,7 +395,6 @@ fun AddInstructionsStep(
 @Composable
 fun AddRecipeInput(
     @StringRes label: Int,
-    //@DrawableRes leadingIcon: Int,
     value: String,
     onValueChanged: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
@@ -406,7 +411,6 @@ fun AddRecipeInput(
         singleLine = singleLine,
         label = { Text(stringResource(label)) },
         keyboardOptions = keyboardOptions,
-        //leadingIcon = { Icon(painter = painterResource(id = leadingIcon), null) },
         modifier = modifier
     )
 }
