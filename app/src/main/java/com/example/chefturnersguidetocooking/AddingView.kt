@@ -1,5 +1,8 @@
 package com.example.chefturnersguidetocooking
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.Image
@@ -66,6 +69,16 @@ fun AddingView() {
     var fatInput by remember { mutableStateOf("") }
     var proteinInput by remember { mutableStateOf("") }
     val instructionList = remember { mutableStateListOf<Instruction>() }
+    var isCameraPermsGranted by remember { mutableStateOf(false) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = {isGranted ->
+            if(isGranted){
+                Log.d("TAG", "Camera $isGranted")
+                isCameraPermsGranted = true
+            }
+        })
 
     Box(
         modifier = Modifier
@@ -108,7 +121,11 @@ fun AddingView() {
                  * to add an image for the recipe, but for now
                  * it's just the chef
                  */
-                onClick = { /*TODO*/ }
+                onClick = {
+                    if(!isCameraPermsGranted){
+                        launcher.launch("android.permission.CAMERA")
+                    }
+                }
             ) {
                 Image(
                     painter = painterResource(R.drawable.chef),
@@ -248,7 +265,7 @@ fun RecipeInstructions(
     var instructionsInput by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
 
-    if( steps < 1){
+    if (steps < 1) {
         steps = 1
     }
 
