@@ -65,6 +65,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import com.example.chefturnersguidetocooking.RecipeViewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.chefturnersguidetocooking.database.DatabaseViewModel
 import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
 
 
@@ -76,7 +77,8 @@ import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
 fun RecipeApp(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
-    navController: NavController // Add NavController as a parameter
+    navController: NavController,
+    dbViewModel: DatabaseViewModel// Add NavController as a parameter
 ) {
     val viewModel: RecipeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -87,7 +89,7 @@ fun RecipeApp(
         WindowWidthSizeClass.Expanded -> RecipeContentType.ListAndDetail
         else -> RecipeContentType.ListOnly
     }
-
+    val dbState = dbViewModel.dbState.collectAsState()
     Scaffold(
         topBar = {
             RecipeAppBar(
