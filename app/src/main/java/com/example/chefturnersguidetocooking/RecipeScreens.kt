@@ -258,8 +258,8 @@ sealed class BottomNavigationItem(val route: String, val label: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecipeListItem(
-    recipes: List<Recipe>,
-    onItemClick: (Recipe) -> Unit,
+    recipes: Recipes,
+    onItemClick: (Recipes) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
