@@ -12,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,7 +24,7 @@ import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
  * Activity for Recipes app
  */
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class) // ? This does not exist
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -39,7 +38,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun RecipeAppContent() {
         RecipeTheme {
-            val layoutDirection = LocalLayoutDirection.current
+            // val layoutDirection = LocalLayoutDirection.current // Not sure what this is for, never used
             val navController = rememberNavController()
 
             Scaffold(
@@ -56,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = "home") {
                         composable("home") {
                             RecipeApp(
-                                windowSize = WindowWidthSizeClass.Compact, // Define your logic for windowSize here
+                                windowSize = windowSize, // Define your logic for windowSize here
                                 onBackPressed = onBackPressed,
                                 navController = navController,
                                 dbViewModel = dbViewModel
