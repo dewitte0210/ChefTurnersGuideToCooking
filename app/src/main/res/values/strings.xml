@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Chef Turner Cooking Guide</string>
+    <string name="favorite_page">Your Selection</string>
     <!-- Strings used for fragments for navigation -->
     <string name="list_fragment_label">Chef Turner Cooking Guide</string>
     <string name="detail_fragment_label">Recipe Info</string>
