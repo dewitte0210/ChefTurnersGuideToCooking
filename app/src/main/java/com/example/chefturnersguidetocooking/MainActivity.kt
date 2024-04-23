@@ -39,38 +39,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RecipeAppContent()
-            val database = RecipeDatabase.getInstance(applicationContext)
-            val repository = DatabaseRepository.getRepository(database)
-            val dbViewModel = DatabaseViewModel(repository)
-            val cursor = database.query("PRAGMA wal_checkpoint", arrayOf())
-            cursor.moveToFirst()
-            setContent {
-                RecipeTheme {
-                    val layoutDirection = LocalLayoutDirection.current
-                    Surface(
-                        modifier = Modifier
-                            .padding(
-                                start = WindowInsets.safeDrawing.asPaddingValues()
-                                    .calculateStartPadding(layoutDirection),
-                                end = WindowInsets.safeDrawing.asPaddingValues()
-                                    .calculateEndPadding(layoutDirection)
-                            )
-                    ) {
-                        val navController = rememberNavController()
-                        val onBackPressed: () -> Unit = {
-                            // Define your logic for back button press here
-                        }
-                        val windowSize: WindowWidthSizeClass =
-                            WindowWidthSizeClass.Compact // Define your logic for windowSize here
-                        RecipeApp(
-                            onBackPressed = onBackPressed,
-                            windowSize = windowSize,
-                            navController = navController,
-                            dbViewModel = dbViewModel
-                        )
-                    }
-                }
-            }
         }
     }
 
@@ -99,7 +67,6 @@ class MainActivity : ComponentActivity() {
                                 onBackPressed = onBackPressed,
                                 navController = navController,
                                 dbViewModel = dbViewModel
-
                             )
                         }
                         composable("add_recipes") { AddingView() }
