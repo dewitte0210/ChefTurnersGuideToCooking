@@ -66,6 +66,7 @@ import androidx.navigation.compose.NavHost
 import com.example.chefturnersguidetocooking.RecipeViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.chefturnersguidetocooking.database.DatabaseViewModel
+import com.example.chefturnersguidetocooking.database.Recipe
 import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
 
 
@@ -78,7 +79,7 @@ fun RecipeApp(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
     navController: NavController,
-    dbViewModel: DatabaseViewModel// Add NavController as a parameter
+    dbViewModel: DatabaseViewModel
 ) {
     val viewModel: RecipeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -257,8 +258,8 @@ sealed class BottomNavigationItem(val route: String, val label: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecipeListItem(
-    recipes: Recipes,
-    onItemClick: (Recipes) -> Unit,
+    recipes: List<Recipe>,
+    onItemClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
