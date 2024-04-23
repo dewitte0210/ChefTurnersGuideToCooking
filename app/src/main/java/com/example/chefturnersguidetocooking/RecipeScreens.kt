@@ -46,6 +46,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
@@ -66,6 +68,8 @@ import androidx.navigation.compose.NavHost
 import com.example.chefturnersguidetocooking.RecipeViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.chefturnersguidetocooking.database.DatabaseViewModel
+import com.example.chefturnersguidetocooking.database.Recipe
+import com.example.chefturnersguidetocooking.database.SingleRecipeAllInfo
 import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
 
 
@@ -78,7 +82,7 @@ fun RecipeApp(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
     navController: NavController,
-    dbViewModel: DatabaseViewModel// Add NavController as a parameter
+    dbViewModel: DatabaseViewModel
 ) {
     val viewModel: RecipeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -104,10 +108,10 @@ fun RecipeApp(
     ) { innerPadding ->
         if (contentType == RecipeContentType.ListAndDetail) {
             RecipeListAndDetail(
-                recipes = uiState.RecipeList,
-                selectedRecipes = uiState.currentRecipes,
+                recipes = dbState.value.recipes,
+                selectedRecipe = dbState.value.curRecipe!!,
                 onClick = {
-                    viewModel.updateCurrentRecipe(it)
+                   dbViewModel.updateCurRid(it.rid)
                 },
                 onBackPressed = onBackPressed,
                 contentPadding = innerPadding,
@@ -116,9 +120,9 @@ fun RecipeApp(
         } else {
             if (uiState.isShowingListPage) {
                 RecipesList(
-                    recipes = uiState.RecipeList,
+                    recipes = dbState.value.recipes,
                     onClick = {
-                        viewModel.updateCurrentRecipe(it)
+                        dbViewModel.updateCurRid(it.rid)
                         viewModel.navigateToDetailPage()
                     },
                     modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium)),
@@ -126,7 +130,7 @@ fun RecipeApp(
                 )
             } else {
                 RecipesDetail(
-                    selectedRecipes = uiState.currentRecipes,
+                    selectedRecipe = dbState.value.curRecipe!!,
                     contentPadding = innerPadding,
                     onBackPressed = {
                         viewModel.navigateToListPage()
@@ -257,15 +261,15 @@ sealed class BottomNavigationItem(val route: String, val label: String) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecipeListItem(
-    recipes: Recipes,
-    onItemClick: (Recipes) -> Unit,
+    recipe: Recipe,
+    onItemClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         elevation = CardDefaults.cardElevation(),
         modifier = modifier,
         shape = RoundedCornerShape(dimensionResource(R.dimen.card_corner_radius)),
-        onClick = { onItemClick(recipes) }
+        onClick = { onItemClick(recipe) }
     ) {
         Row(
             modifier = Modifier
@@ -273,7 +277,7 @@ private fun RecipeListItem(
                 .size(dimensionResource(R.dimen.card_image_height))
         ) {
             RecipeImageItem(
-                recipes = recipes,
+                recipe = recipe,
                 modifier = Modifier.size(dimensionResource(R.dimen.card_image_height))
             )
             Column(
@@ -285,17 +289,18 @@ private fun RecipeListItem(
                     .weight(1f)
             ) {
                 Text(
-                    text = stringResource(recipes.titleResourceId),
+                    text = recipe.name ?: stringResource(R.string.noNameDefault),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = dimensionResource(R.dimen.card_text_vertical_space))
                 )
-                Text(
+                /*
+                Text( /// -------- Mark
                     text = stringResource(recipes.subtitleResourceId),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.secondary,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 3
-                )
+                )*/
                 Row {
                 }
             }
@@ -305,23 +310,32 @@ private fun RecipeListItem(
 
 
 @Composable
-private fun RecipeImageItem(recipes: Recipes, modifier: Modifier = Modifier) {
+private fun RecipeImageItem(recipe: Recipe, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
     ) {
-        Image(
-            painter = painterResource(recipes.imageResourceId),
-            contentDescription = null,
-            alignment = Alignment.Center,
-            contentScale = ContentScale.FillWidth
-        )
+        if (recipe.image?.asImageBitmap() != null) {
+            Image(
+                painter =  BitmapPainter(recipe.image.asImageBitmap()),
+                contentDescription = null,
+                alignment = Alignment.Center,
+                contentScale = ContentScale.FillWidth
+            )
+        } else {
+            Image(
+                painter = painterResource(R.drawable.chef),
+                contentDescription = null,
+                alignment = Alignment.Center,
+                contentScale = ContentScale.FillWidth
+            )
+        }
     }
 }
 
 @Composable
 private fun RecipesList(
-    recipes: List<Recipes>,
-    onClick: (Recipes) -> Unit,
+    recipes: List<Recipe>,
+    onClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -330,18 +344,18 @@ private fun RecipesList(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
         modifier = modifier.padding(top = dimensionResource(R.dimen.padding_medium)),
     ) {
-        items(recipes, key = { Recipe -> Recipe.id }) { recipe ->
+        items(recipes, key = { recipe -> recipe.rid }) { recipe ->
             RecipeListItem(
-                recipes = recipe,
+                recipe = recipe,
                 onItemClick = onClick
             )
         }
     }
 }
-
+ // The Above function has been converted!
 @Composable
 private fun RecipesDetail(
-    selectedRecipes: Recipes,
+    selectedRecipe: SingleRecipeAllInfo,
     onBackPressed: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
@@ -366,12 +380,21 @@ private fun RecipesDetail(
         ) {
             Box {
                 Box {
-                    Image(
-                        painter = painterResource(selectedRecipes.recipeImageBanner),
-                        contentDescription = null,
-                        alignment = Alignment.TopCenter,
-                        contentScale = ContentScale.FillWidth,
-                    )
+                    if (selectedRecipe.recipe?.image?.asImageBitmap() != null) {
+                        Image(
+                            painter = BitmapPainter(selectedRecipe.recipe.image.asImageBitmap()),
+                            contentDescription = null,
+                            alignment = Alignment.TopCenter,
+                            contentScale = ContentScale.FillWidth,
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(R.drawable.chef),
+                            contentDescription = null,
+                            alignment = Alignment.TopCenter,
+                            contentScale = ContentScale.FillWidth,
+                        )
+                    }
                 }
                 Column(
                     Modifier
@@ -386,7 +409,7 @@ private fun RecipesDetail(
                         )
                 ) {
                     Text(
-                        text = stringResource(selectedRecipes.titleResourceId),
+                        text = selectedRecipe.recipe?.name ?: "",
                         style = MaterialTheme.typography.headlineLarge,
                         color = MaterialTheme.colorScheme.inverseOnSurface,
                         modifier = Modifier
@@ -399,7 +422,7 @@ private fun RecipesDetail(
                 }
             }
             Text(
-                text = stringResource(selectedRecipes.recipesDetails),
+                text = selectedRecipe.recipe?.description ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_detail_content_vertical),
@@ -412,9 +435,9 @@ private fun RecipesDetail(
 
 @Composable
 private fun RecipeListAndDetail(
-    recipes: List<Recipes>,
-    selectedRecipes: Recipes,
-    onClick: (Recipes) -> Unit,
+    recipes: List<Recipe>,
+    selectedRecipe: SingleRecipeAllInfo,
+    onClick: (Recipe) -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -431,7 +454,7 @@ private fun RecipeListAndDetail(
                 .padding(horizontal = dimensionResource(R.dimen.padding_medium))
         )
         RecipesDetail(
-            selectedRecipes = selectedRecipes,
+            selectedRecipe = selectedRecipe,
             modifier = Modifier.weight(3f),
             contentPadding = contentPadding, // Use contentPadding here
             onBackPressed = onBackPressed,
@@ -439,12 +462,13 @@ private fun RecipeListAndDetail(
     }
 }
 
+/* Preview functions that dont work now that database is integrated
 @Preview
 @Composable
 fun RecipesListItemPreview() {
     RecipeTheme {
         RecipeListItem(
-            recipes = ExamplesDataProvider.defaultRecipe,
+            recipe = ExamplesDataProvider.defaultRecipe,
             onItemClick = {}
         )
     }
@@ -479,3 +503,4 @@ fun RecipesListAndDetailsPreview() {
         }
     }
 }
+*/
