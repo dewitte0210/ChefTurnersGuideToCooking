@@ -72,16 +72,6 @@ fun AddingView() {
     var fatInput by remember { mutableStateOf("") }
     var proteinInput by remember { mutableStateOf("") }
     val instructionList = remember { mutableStateListOf<Instruction>() }
-    var isCameraPermsGranted by remember { mutableStateOf(false) }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = {isGranted ->
-            if(isGranted){
-                Log.d("TAG", "Camera $isGranted")
-                isCameraPermsGranted = true
-            }
-        })
 
     Box(
         modifier = Modifier
@@ -125,9 +115,7 @@ fun AddingView() {
                  * it's just the chef
                  */
                 onClick = {
-                    if(!isCameraPermsGranted){
-                        launcher.launch("android.permission.CAMERA")
-                    }
+                    /*TODO*/
                 }
             ) {
                 Image(
@@ -219,13 +207,15 @@ fun AddingView() {
                     .padding(bottom = 16.dp)
                     .fillMaxWidth()
             )
+            Text(
+                text = "Nutrition Facts (per serving)",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+            )
             Row(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
             ) {
-                Text(
-                    text = "Nutrition Facts (per serving)"
-                )
                 AddRecipeInput(
                     label = R.string.calories,
                     value = calorieInput,
