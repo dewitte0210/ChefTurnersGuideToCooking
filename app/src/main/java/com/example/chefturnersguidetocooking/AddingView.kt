@@ -64,6 +64,9 @@ fun AddingView() {
     var nameInput by remember { mutableStateOf("") }
     var originInput by remember { mutableStateOf("") }
     var descriptionInput by remember { mutableStateOf("") }
+    var prepTimeInput by remember { mutableStateOf("") }
+    var servingsInput by remember { mutableStateOf("") }
+    var cookTimeInput by remember { mutableStateOf("") }
     var calorieInput by remember { mutableStateOf("") }
     var carbInput by remember { mutableStateOf("") }
     var fatInput by remember { mutableStateOf("") }
@@ -157,18 +160,72 @@ fun AddingView() {
                 ),
                 singleLine = false,
                 modifier = Modifier
-                    .height(200.dp)
+                   // .height(200.dp)
                     .padding(bottom = 16.dp)
                     .fillMaxWidth()
             )
+            Button(
+                /**
+                 * Button that goes to the adding ingredients view
+                 */
+                onClick = {
+                    /*TODO*/
+                },
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Manage Ingredients"
+                )
+            }
             RecipeInstructions(
                 instructionList = instructionList,
                 modifier = Modifier
+            )
+            AddRecipeInput(
+                label = R.string.prep_time,
+                value = prepTimeInput,
+                onValueChanged = { prepTimeInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            )
+            AddRecipeInput(
+                label = R.string.cook_time,
+                value = cookTimeInput,
+                onValueChanged = { cookTimeInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            )
+            AddRecipeInput(
+                label = R.string.servings,
+                value = servingsInput,
+                onValueChanged = { servingsInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
             )
             Row(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
             ) {
+                Text(
+                    text = "Nutrition Facts (per serving)"
+                )
                 AddRecipeInput(
                     label = R.string.calories,
                     value = calorieInput,
@@ -217,22 +274,6 @@ fun AddingView() {
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
-                )
-            }
-
-            Button(
-                /**
-                 * Button that goes to the adding ingredients view
-                 */
-                onClick = {
-
-                },
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Manage Ingredients"
                 )
             }
             Button(
@@ -372,12 +413,20 @@ fun InstructionStep(
             .fillMaxWidth()
             .background(Color.LightGray)
     ) {
+        Icon(
+            imageVector = Icons.Default.Delete, contentDescription = "Delete",
+            modifier = Modifier
+        )
         Text(
-            text = "Step ${instruction.stepNum}: ",
+            text = "${instruction.stepNum}: ",
             modifier = modifier
         )
         Text(
             text = instruction.instruction
+        )
+        Icon(
+            imageVector = Icons.Default.Edit, contentDescription = "Edit",
+            modifier = Modifier
         )
     }
 }
