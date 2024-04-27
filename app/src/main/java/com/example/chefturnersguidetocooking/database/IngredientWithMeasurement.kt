@@ -17,5 +17,5 @@ data class IngredientWithMeasurement(
             entityColumn = "mid"
         )
     )
-    val measurement: Measurement
+    val measurement: Measurement?
 )

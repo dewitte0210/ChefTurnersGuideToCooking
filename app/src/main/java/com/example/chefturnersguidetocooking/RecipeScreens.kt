@@ -130,7 +130,7 @@ fun RecipeApp(
                 )
             } else {
                 RecipesDetail(
-                    selectedRecipe = dbState.value.curRecipe!!,
+                    selectedRecipe = dbState.value.curRecipe,
                     contentPadding = innerPadding,
                     onBackPressed = {
                         viewModel.navigateToListPage()
@@ -355,7 +355,7 @@ private fun RecipesList(
  // The Above function has been converted!
 @Composable
 private fun RecipesDetail(
-    selectedRecipe: SingleRecipeAllInfo,
+    selectedRecipe: SingleRecipeAllInfo?,
     onBackPressed: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
@@ -380,7 +380,7 @@ private fun RecipesDetail(
         ) {
             Box {
                 Box {
-                    if (selectedRecipe.recipe?.image?.asImageBitmap() != null) {
+                    if (selectedRecipe?.recipe?.image?.asImageBitmap() != null) {
                         Image(
                             painter = BitmapPainter(selectedRecipe.recipe.image.asImageBitmap()),
                             contentDescription = null,
@@ -409,7 +409,7 @@ private fun RecipesDetail(
                         )
                 ) {
                     Text(
-                        text = selectedRecipe.recipe?.name ?: "",
+                        text = selectedRecipe?.recipe?.name ?: "",
                         style = MaterialTheme.typography.headlineLarge,
                         color = MaterialTheme.colorScheme.inverseOnSurface,
                         modifier = Modifier
@@ -422,7 +422,7 @@ private fun RecipesDetail(
                 }
             }
             Text(
-                text = selectedRecipe.recipe?.description ?: "",
+                text = selectedRecipe?.recipe?.description ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_detail_content_vertical),
@@ -436,7 +436,7 @@ private fun RecipesDetail(
 @Composable
 private fun RecipeListAndDetail(
     recipes: List<Recipe>,
-    selectedRecipe: SingleRecipeAllInfo,
+    selectedRecipe: SingleRecipeAllInfo?,
     onClick: (Recipe) -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
