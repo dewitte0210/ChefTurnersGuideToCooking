@@ -11,7 +11,7 @@ interface DishTypeDao {
     @Query("SELECT * FROM DishType")
     fun getAllTypes(): Flow<List<DishType>>
 
-    @Query("SELECT * FROM DishType WHERE name = :typeName")
+    @Query("SELECT * FROM DishType WHERE typeName = :typeName")
     fun getType(typeName: String): Flow<List<DishType>>
 
     @Insert

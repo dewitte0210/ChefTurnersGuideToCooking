@@ -6,11 +6,11 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index(value = ["name"], unique = true)])
+@Entity(indices = [Index(value = ["typeName"], unique = true)])
 data class DishType(
     @NonNull
     @PrimaryKey(autoGenerate = true)
     val dtid: Long = 0,
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "typeName")
     val name: String?
 )

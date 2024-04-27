@@ -13,7 +13,7 @@ data class Recipe(
     @NonNull
     @PrimaryKey(autoGenerate = true)
     val rid : Long = 0,
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "recipeName")
     val name: String?,
     @ColumnInfo(name = "origin")
     val origin: String?,

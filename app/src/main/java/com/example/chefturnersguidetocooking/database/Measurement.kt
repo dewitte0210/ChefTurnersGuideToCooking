@@ -6,11 +6,11 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index(value = ["name"], unique = true)])
+@Entity(indices = [Index(value = ["measurementName"], unique = true)])
 data class Measurement(
     @NonNull
     @PrimaryKey(autoGenerate = true)
         val mid: Long = 0,
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "measurementName")
         val name: String?
 )
