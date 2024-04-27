@@ -429,6 +429,79 @@ private fun RecipesDetail(
                     horizontal = dimensionResource(R.dimen.padding_detail_content_horizontal)
                 )
             )
+            Text(
+                text = selectedRecipe?.recipe?.instructions ?: "",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(R.dimen.padding_detail_content_vertical),
+                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                )
+            )
+            Text(
+                text = "Servings: " + (selectedRecipe?.recipe?.servings?: ""),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(R.dimen.padding_small),
+                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                )
+            )
+            Text(
+                text = "Calories: " + (selectedRecipe?.recipe?.calories?: ""),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(R.dimen.padding_small),
+                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                )
+            )
+            Text(
+                text = "Carbs: " + (selectedRecipe?.recipe?.carbs?: ""),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(R.dimen.padding_small),
+                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                )
+            )
+            Text(
+                text = "Fat: " + (selectedRecipe?.recipe?.fat?: ""),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(R.dimen.padding_small),
+                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                )
+            )
+            Text(
+                text = "Protein: " + (selectedRecipe?.recipe?.protein?: ""),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(
+                    vertical = dimensionResource(R.dimen.padding_small),
+                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                )
+            )
+            Row(){
+                // Needed to separate start and end padding to display two fields next to each other
+                Text(
+                    text = "Cook Time: " + (selectedRecipe?.recipe?.cookTime ?: ""),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(PaddingValues(
+                        top = dimensionResource(R.dimen.padding_detail_content_vertical),
+                        bottom = dimensionResource(R.dimen.padding_detail_content_vertical),
+                        start = dimensionResource(R.dimen.padding_detail_content_horizontal),
+                        end = dimensionResource(R.dimen.padding_small)
+                    ))
+                )
+                Text(
+                    text = "Prep Time: " + (selectedRecipe?.recipe?.prepTime ?: ""),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(
+                        PaddingValues(
+                            top =dimensionResource(R.dimen.padding_detail_content_vertical),
+                            bottom = dimensionResource(R.dimen.padding_detail_content_vertical),
+                            start = dimensionResource(R.dimen.padding_small),
+                            end = dimensionResource(R.dimen.padding_detail_content_horizontal)
+                        )
+                    )
+                )
+            }
         }
     }
 }
