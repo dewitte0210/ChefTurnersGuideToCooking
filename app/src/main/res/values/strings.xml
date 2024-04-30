@@ -41,4 +41,5 @@
     <string name="prep_time">Prep Time</string>
     <string name="servings">Servings</string>
     <string name="cook_time">Cook Time</string>
+    <string name="dish_type">Dish Type</string>
 </resources>

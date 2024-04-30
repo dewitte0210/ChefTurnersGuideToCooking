@@ -1,12 +1,11 @@
 package com.example.chefturnersguidetocooking
 
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.app.AlertDialog
 import androidx.annotation.StringRes
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
@@ -31,8 +31,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -64,6 +66,7 @@ fun AddingView() {
     var nameInput by remember { mutableStateOf("") }
     var originInput by remember { mutableStateOf("") }
     var descriptionInput by remember { mutableStateOf("") }
+    var dishTypeInput by remember { mutableStateOf("") }
     var prepTimeInput by remember { mutableStateOf("") }
     var servingsInput by remember { mutableStateOf("") }
     var cookTimeInput by remember { mutableStateOf("") }
@@ -139,6 +142,18 @@ fun AddingView() {
                     .fillMaxWidth()
             )
             AddRecipeInput(
+                label = R.string.dish_type,
+                value = dishTypeInput,
+                onValueChanged = { dishTypeInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            )
+            AddRecipeInput(
                 label = R.string.recipe_description,
                 value = descriptionInput,
                 onValueChanged = { descriptionInput = it },
@@ -148,7 +163,7 @@ fun AddingView() {
                 ),
                 singleLine = false,
                 modifier = Modifier
-                   // .height(200.dp)
+                    // .height(200.dp)
                     .padding(bottom = 16.dp)
                     .fillMaxWidth()
             )
@@ -268,8 +283,7 @@ fun AddingView() {
             }
             Button(
                 /**
-                 * The on click function will add all of the data to
-                 * the database. This will be done as the final part of the project
+                 * The on click function will add all of the data to the database.
                  */
                 onClick = {
                     /*TODO*/
@@ -296,8 +310,8 @@ fun RecipeInstructions(
     var instructionsInput by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
 
-    if (steps < 1) {
-        steps = 1
+    if (steps < instructionList.size) {
+        steps = instructionList.size
     }
 
     Text(
@@ -313,17 +327,23 @@ fun RecipeInstructions(
             .height((200).dp)
     ) {
         items(instructionList, key = { Instruction -> Instruction.stepNum }) { instruction ->
+            fun deleteInstruction()  {
+                instructionList.remove(instruction)
+                val stepNum = instruction.stepNum
+                for (step in instructionList) {
+                    if (step.stepNum > stepNum) {
+                        step.stepNum--
+                    }
+                }
+                steps--
+            }
+
             val state = rememberDismissState(
                 confirmValueChange = {
                     if (it == DismissValue.DismissedToStart) {
-                        val stepNum = instruction.stepNum
-                        for (step in instructionList) {
-                            if (step.stepNum > stepNum) {
-                                step.stepNum--
-                            }
-                        }
-                        steps--
-                        instructionList.remove(instruction)
+                        deleteInstruction()
+                    } else if (it == DismissValue.DismissedToEnd) {
+
                     }
                     false
                 }
@@ -342,11 +362,13 @@ fun RecipeInstructions(
                             .background(color)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Delete, contentDescription = "Delete",
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
                             modifier = Modifier.align(Alignment.CenterEnd)
                         )
                         Icon(
-                            imageVector = Icons.Default.Edit, contentDescription = "Edit",
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
                             modifier = Modifier.align(Alignment.CenterStart)
                         )
                     }
@@ -354,6 +376,7 @@ fun RecipeInstructions(
                 dismissContent = {
                     InstructionStep(
                         instruction = instruction,
+                        deleteInstruction = { deleteInstruction() },
                         modifier = modifier
                     )
                 })
@@ -389,35 +412,91 @@ fun RecipeInstructions(
             text = "Add a Step"
         )
     }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditInstructionDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("Cancel")
+            }
+        }
+    )
 }
 
 
 @Composable
 fun InstructionStep(
     instruction: Instruction,
+    deleteInstruction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var openAlertDialog by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(Color.LightGray)
     ) {
         Icon(
-            imageVector = Icons.Default.Delete, contentDescription = "Delete",
+            imageVector = Icons.Default.Edit, contentDescription = "Edit",
             modifier = Modifier
+                .align(Alignment.CenterVertically)
         )
         Text(
             text = "${instruction.stepNum}: ",
-            modifier = modifier
-        )
-        Text(
-            text = instruction.instruction
-        )
-        Icon(
-            imageVector = Icons.Default.Edit, contentDescription = "Edit",
             modifier = Modifier
         )
+        Text(
+            text = instruction.instruction,
+            modifier = Modifier.fillMaxWidth(.9f)
+        )
+        Icon(
+            imageVector = Icons.Default.Delete, contentDescription = "Delete",
+            modifier = Modifier
+                .align(Alignment.CenterVertically).clickable { deleteInstruction() }
+        )
+        if (openAlertDialog) {
+            EditInstructionDialog(
+                onDismissRequest = {  },
+                onConfirmation = {
+
+                },
+                dialogTitle = "Edit Step ${instruction.stepNum}",
+                dialogText = instruction.instruction,
+                modifier = Modifier
+            )
+        }
     }
 }
 
