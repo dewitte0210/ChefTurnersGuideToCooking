@@ -28,17 +28,20 @@ import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -57,7 +60,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chefturnersguidetocooking.model.Instruction
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddingView() {
 
@@ -148,16 +153,19 @@ fun AddingView() {
                 ),
                 singleLine = false,
                 modifier = Modifier
-                   // .height(200.dp)
+                    // .height(200.dp)
                     .padding(bottom = 16.dp)
                     .fillMaxWidth()
             )
+            val sheetState = rememberModalBottomSheetState()
+            val scope = rememberCoroutineScope()
+            var showBottomSheet by remember { mutableStateOf(false) }
             Button(
                 /**
                  * Button that goes to the adding ingredients view
                  */
                 onClick = {
-                    /*TODO*/
+                    showBottomSheet = true
                 },
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -166,6 +174,28 @@ fun AddingView() {
                 Text(
                     text = "Manage Ingredients"
                 )
+            }
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState
+                ) {
+                    // Sheet content
+                    Text(
+                        text = "List of ingredients"
+                    )
+                    Button(onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                            }
+                        }
+                    }) {
+                        Text("Add Ingredients")
+                    }
+                }
             }
             RecipeInstructions(
                 instructionList = instructionList,
