@@ -28,10 +28,13 @@ import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chefturnersguidetocooking.model.Instruction
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddingView() {
 
@@ -80,25 +84,29 @@ fun AddingView() {
             }
         })
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
     ) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(R.string.add_a_new_recipe),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            ),
+        )
+
         Column(
             modifier = Modifier
                 .padding(20.dp)
                 .verticalScroll(rememberScrollState())
         )
         {
-            Text(
-                text = stringResource(R.string.add_a_new_recipe),
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(16.dp)
-            )
             AddRecipeInput(
                 label = R.string.recipe_name,
                 value = nameInput,
@@ -254,7 +262,6 @@ fun AddingView() {
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeInstructions(
