@@ -104,6 +104,12 @@ class DatabaseViewModel(
     fun updateCurRid(id: Long){
         _curRid.value = id
     }
+
+    fun toggleFavoriteRecipe(id: Long, fav: Boolean) {
+        viewModelScope.launch {
+            dbRepository.updateFav(fav, id)
+        }
+    }
    /*
     fun insertDishType(name: String){
         val dishType = RecipeDishType(name = name)
