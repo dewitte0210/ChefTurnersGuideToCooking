@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -352,7 +353,15 @@ private fun RecipesList(
         }
     }
 }
- // The Above function has been converted!
+
+/**
+ * Composable function that lays out the details of each recipe
+ * @param selectedRecipe (SingleRecipeAllInfo?) The object from the database that holds the recipe data
+ *      view the SingleRecipeAllInfo page to view all fields you can pull from there
+ * @param onBackPressed (fun -> Unit()) function to handle pressing the back button
+ * @param contentPadding (PaddingValues) padding values that are passed to all components
+ * @param modifier (Modifier) modifier to change look
+ */
 @Composable
 private fun RecipesDetail(
     selectedRecipe: SingleRecipeAllInfo?,
@@ -378,8 +387,10 @@ private fun RecipesDetail(
                     end = contentPadding.calculateEndPadding(layoutDirection)
                 )
         ) {
-            Box {
-                Box {
+            Box (){
+                Box() {
+                    // If there is an image display it, otherwise display the image of our
+                    // beautiful chef turner
                     if (selectedRecipe?.recipe?.image?.asImageBitmap() != null) {
                         Image(
                             painter = BitmapPainter(selectedRecipe.recipe.image.asImageBitmap()),
@@ -393,6 +404,7 @@ private fun RecipesDetail(
                             contentDescription = null,
                             alignment = Alignment.TopCenter,
                             contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
