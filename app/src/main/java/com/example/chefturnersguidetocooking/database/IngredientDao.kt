@@ -11,7 +11,7 @@ interface IngredientDao {
     @Query("SELECT * FROM Ingredient")
     fun getAllIngredients(): Flow<List<Ingredient>>
 
-    @Query("SELECT * FROM Ingredient WHERE ingredientName = :ingredientName")
+    @Query("SELECT * FROM Ingredient WHERE name = :ingredientName")
     fun getIngredient(ingredientName: String): Flow<List<Ingredient>>
 
     @Insert
