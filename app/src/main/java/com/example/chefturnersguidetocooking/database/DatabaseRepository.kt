@@ -34,7 +34,7 @@ class DatabaseRepository (
     //Recipe Queries
     override fun getAllRecipes(): Flow<List<Recipe>>
     = recipeDao.getAllRecipes()
-    override fun updateFav(fav: Boolean, rid: Long)
+    override suspend fun updateFav(fav: Boolean, rid: Long)
     = recipeDao.updateFav(fav, rid)
     override suspend fun insertRecipe(rec: Recipe)
     = recipeDao.insertRecipe(rec)

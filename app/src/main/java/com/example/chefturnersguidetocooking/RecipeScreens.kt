@@ -120,6 +120,7 @@ fun RecipeApp(
                 },
                 onBackPressed = onBackPressed,
                 contentPadding = innerPadding,
+                dbViewModel = dbViewModel,
                 modifier = Modifier.fillMaxWidth()
             )
         } else {
@@ -139,7 +140,8 @@ fun RecipeApp(
                     contentPadding = innerPadding,
                     onBackPressed = {
                         viewModel.navigateToListPage()
-                    }
+                    },
+                    dbViewModel = dbViewModel
                 )
             }
         }
@@ -390,6 +392,7 @@ private fun RecipesDetail(
     selectedRecipe: SingleRecipeAllInfo?,
     onBackPressed: () -> Unit,
     contentPadding: PaddingValues,
+    dbViewModel: DatabaseViewModel,
     modifier: Modifier = Modifier
 ) {
     BackHandler {
@@ -450,6 +453,19 @@ private fun RecipesDetail(
                         modifier = Modifier
                             .padding(horizontal = dimensionResource(R.dimen.padding_small))
                     )
+                    IconButton(onClick = {
+                        if(!selectedRecipe!!.recipe!!.favorite) {
+                            dbViewModel.toggleFavoriteRecipe(selectedRecipe.recipe!!.rid, true)
+                        }
+                        else {
+                            dbViewModel.toggleFavoriteRecipe(selectedRecipe.recipe!!.rid, false)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.FavoriteBorder,
+                            contentDescription = stringResource(R.string.fav_button)
+                        )
+                    }
                     Row(
                         modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                     ) {
@@ -547,6 +563,7 @@ private fun RecipeListAndDetail(
     selectedRecipe: SingleRecipeAllInfo?,
     onClick: (Recipe) -> Unit,
     onBackPressed: () -> Unit,
+    dbViewModel: DatabaseViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -566,6 +583,8 @@ private fun RecipeListAndDetail(
             modifier = Modifier.weight(3f),
             contentPadding = contentPadding, // Use contentPadding here
             onBackPressed = onBackPressed,
+            dbViewModel = dbViewModel
+
         )
     }
 }

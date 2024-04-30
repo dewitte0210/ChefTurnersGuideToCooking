@@ -12,7 +12,7 @@ interface RecipeDao {
     fun getAllRecipes(): Flow<List<Recipe>>
 
     @Query("UPDATE Recipe SET favorite = :fav WHERE rid = :rid")
-    fun updateFav(fav: Boolean, rid: Long)
+    suspend fun updateFav(fav: Boolean, rid: Long)
 
     @Insert
     suspend fun insertRecipe(rec: Recipe)
