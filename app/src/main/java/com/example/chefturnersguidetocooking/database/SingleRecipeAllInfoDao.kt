@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SingleRecipeAllInfoDao {
     @Transaction
-    @Query("SELECT * FROM Recipe r " +
+    @Query("SELECT r.name, r.origin, r.rid, r.favorite, r.image, r.num_cooked," +
+            "r.description, r.instructions, r.servings, r.calories, r.carbs, r.fat, r.protein, r.prep_time, r.cook_time," +
+            "r.total_time, i.name as ingredientName,m.name as measurementName, dt.name as typeName, " +
+            "ri.amount, ri.prepared FROM Recipe r " +
             "JOIN RecipeIngredient ri ON ri.rid = r.rid " +
             "JOIN Ingredient i ON i.iid = ri.iid " +
             "JOIN Measurement m ON m.mid = ri.mid " +
