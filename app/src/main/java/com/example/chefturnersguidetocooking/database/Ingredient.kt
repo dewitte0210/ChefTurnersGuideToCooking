@@ -12,5 +12,5 @@ data class Ingredient(
     @PrimaryKey(autoGenerate = true)
         val iid: Long = 0,
     @ColumnInfo(name = "ingredientName")
-        val ingredientName: String?
+        val name: String?
 )

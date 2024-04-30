@@ -29,8 +29,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-
-
         setContent {
             RecipeAppContent()
         }
@@ -52,8 +50,6 @@ class MainActivity : ComponentActivity() {
                     val database = RecipeDatabase.getInstance(applicationContext)
                     val repository = DatabaseRepository.getRepository(database)
                     val dbViewModel = DatabaseViewModel(repository)
-                    val cursor = database.query("PRAGMA wal_checkpoint", arrayOf())
-                    cursor.moveToFirst()
                     val windowSize: WindowWidthSizeClass =
                         WindowWidthSizeClass.Compact // Define your logic for windowSize here
                     NavHost(navController = navController, startDestination = "home") {
