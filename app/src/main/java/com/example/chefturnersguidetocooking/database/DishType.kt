@@ -12,5 +12,5 @@ data class DishType(
     @PrimaryKey(autoGenerate = true)
     val dtid: Long = 0,
     @ColumnInfo(name = "typeName")
-    val name: String?
+    val typeName: String?
 )

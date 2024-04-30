@@ -14,7 +14,7 @@ data class Recipe(
     @PrimaryKey(autoGenerate = true)
     val rid : Long = 0,
     @ColumnInfo(name = "recipeName")
-    val name: String?,
+    val recipeName: String?,
     @ColumnInfo(name = "origin")
     val origin: String?,
     @ColumnInfo(name = "favorite")

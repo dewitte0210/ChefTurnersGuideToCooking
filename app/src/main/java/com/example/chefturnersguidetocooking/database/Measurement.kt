@@ -12,5 +12,5 @@ data class Measurement(
     @PrimaryKey(autoGenerate = true)
         val mid: Long = 0,
     @ColumnInfo(name = "measurementName")
-        val name: String?
+        val measurementName: String?
 )

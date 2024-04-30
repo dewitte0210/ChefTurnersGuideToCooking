@@ -289,7 +289,7 @@ private fun RecipeListItem(
                     .weight(1f)
             ) {
                 Text(
-                    text = recipe.name ?: stringResource(R.string.noNameDefault),
+                    text = recipe.recipeName ?: stringResource(R.string.noNameDefault),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = dimensionResource(R.dimen.card_text_vertical_space))
                 )
@@ -409,7 +409,7 @@ private fun RecipesDetail(
                         )
                 ) {
                     Text(
-                        text = selectedRecipe?.recipe?.name ?: "",
+                        text = selectedRecipe?.recipe?.recipeName ?: "",
                         style = MaterialTheme.typography.headlineLarge,
                         color = MaterialTheme.colorScheme.inverseOnSurface,
                         modifier = Modifier
