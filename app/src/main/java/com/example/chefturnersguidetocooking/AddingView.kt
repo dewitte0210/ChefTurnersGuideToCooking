@@ -7,10 +7,12 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,6 +55,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -76,6 +79,7 @@ fun AddingView() {
     var carbInput by remember { mutableStateOf("") }
     var fatInput by remember { mutableStateOf("") }
     var proteinInput by remember { mutableStateOf("") }
+    val ingredientList  = remember { mutableStateListOf<String>() }
     val instructionList = remember { mutableStateListOf<Instruction>() }
 
     Box(
@@ -160,6 +164,11 @@ fun AddingView() {
             val sheetState = rememberModalBottomSheetState()
             val scope = rememberCoroutineScope()
             var showBottomSheet by remember { mutableStateOf(false) }
+            var ingredientList = ArrayList<String>()
+            ingredientList.add("Butter")
+            ingredientList.add("Milk")
+            ingredientList.add("Eggs")
+            ingredientList.add("Flour")
             Button(
                 /**
                  * Button that goes to the adding ingredients view
@@ -175,6 +184,7 @@ fun AddingView() {
                     text = "Manage Ingredients"
                 )
             }
+
             if (showBottomSheet) {
                 ModalBottomSheet(
                     onDismissRequest = {
@@ -183,9 +193,36 @@ fun AddingView() {
                     sheetState = sheetState
                 ) {
                     // Sheet content
-                    Text(
-                        text = "List of ingredients"
-                    )
+                    //List all ingredients from database
+                    Box(modifier = Modifier.background(Color.LightGray)) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                        ) {
+                            items(items = ingredientList, itemContent = { item ->
+                                Log.d("COMPOSE", "This get rendered $item")
+                                when (item) {
+                                    item -> {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(bottom = 16.dp)
+                                                .clickable {
+
+                                                    Log.d("Hobby", "Pressed Box")
+                                                }
+                                        ) {
+                                            Text(text = item, style = TextStyle(fontSize = 80.sp))
+                                        }
+                                    }
+
+                                    else -> {
+                                        Text(text = item, style = TextStyle(fontSize = 80.sp))
+                                    }
+                                }
+                            })
+                        }
+                    }
                     Button(onClick = {
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
