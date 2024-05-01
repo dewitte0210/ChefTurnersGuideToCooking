@@ -1,6 +1,7 @@
 package com.example.chefturnersguidetocooking
 
 import android.app.AlertDialog
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.Image
@@ -53,6 +54,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -86,12 +88,12 @@ fun AddingView() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(dimensionResource(R.dimen.padding_medium)),
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
-                .padding(20.dp)
+                .padding(dimensionResource(R.dimen.padding_large))
                 .verticalScroll(rememberScrollState())
         )
         {
@@ -100,7 +102,7 @@ fun AddingView() {
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(dimensionResource(R.dimen.padding_medium))
             )
             AddRecipeInput(
                 label = R.string.recipe_name,
@@ -111,14 +113,14 @@ fun AddingView() {
                     imeAction = ImeAction.Next
                 ),
                 modifier = Modifier
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
                     .fillMaxWidth()
             )
             Button(
                 shape = RectangleShape,
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium)),
                 /**
                  * This is where we would add the ability
                  * to add an image for the recipe, but for now
@@ -145,7 +147,7 @@ fun AddingView() {
                     imeAction = ImeAction.Next
                 ),
                 modifier = Modifier
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
                     .fillMaxWidth()
             )
             AddRecipeInput(
@@ -549,7 +551,8 @@ fun InstructionStep(
         Icon(
             imageVector = Icons.Default.Delete, contentDescription = "Delete",
             modifier = Modifier
-                .align(Alignment.CenterVertically).clickable { deleteInstruction() }
+                .align(Alignment.CenterVertically)
+                .clickable { deleteInstruction() }
         )
         if (openAlertDialog) {
             EditInstructionDialog(
