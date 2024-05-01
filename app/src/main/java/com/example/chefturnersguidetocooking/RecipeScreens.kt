@@ -158,17 +158,6 @@ fun RecipeAppBar(
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
-    var checked by remember { mutableStateOf(true) }
-    val icon: (@Composable () -> Unit)? = if (checked) {
-        {
-            Icon(
-                imageVector = Icons.Filled.FavoriteBorder,
-                contentDescription = stringResource(R.string.fav_button)
-            )
-        }
-    } else {
-        null
-    }
     val isShowingDetailPage = windowSize != WindowWidthSizeClass.Expanded && !isShowingListPage
     TopAppBar(
         title = {
@@ -191,17 +180,6 @@ fun RecipeAppBar(
                     )
                 }
 
-            }
-        } else {
-            { Box {} }
-        },
-        actions = if (isShowingDetailPage) {
-            {
-                Switch(
-                    checked = checked,
-                    onCheckedChange = { checked = it },
-                    thumbContent = icon
-                )
             }
         } else {
             { Box {} }
@@ -463,7 +441,7 @@ private fun RecipesDetail(
                     }) {
                         Icon(
                             imageVector = Icons.Filled.FavoriteBorder,
-                            contentDescription = stringResource(R.string.fav_button)
+                            contentDescription = stringResource(R.string.fav_button_unfilled)
                         )
                     }
                     Row(
