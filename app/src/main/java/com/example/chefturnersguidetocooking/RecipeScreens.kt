@@ -431,6 +431,18 @@ private fun RecipesDetail(
                         modifier = Modifier
                             .padding(horizontal = dimensionResource(R.dimen.padding_small))
                     )
+
+                    Row(
+                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
+                    ) {
+                    }
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_small)),
+                    ) {
                     IconButton(onClick = {
                         if(!selectedRecipe!!.recipe!!.favorite) {
                             dbViewModel.toggleFavoriteRecipe(selectedRecipe.recipe!!.rid, true)
@@ -438,15 +450,35 @@ private fun RecipesDetail(
                         else {
                             dbViewModel.toggleFavoriteRecipe(selectedRecipe.recipe!!.rid, false)
                         }
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.FavoriteBorder,
-                            contentDescription = stringResource(R.string.fav_button_unfilled)
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
+                    },
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.padding_detail_content_horizontal))
                     ) {
+                        if(selectedRecipe?.recipe?.favorite == null) {
+                            Icon(
+                                imageVector = Icons.Filled.FavoriteBorder,
+                                contentDescription = stringResource(R.string.fav_button_unfilled),
+                                modifier = Modifier
+                                    .size(dimensionResource(R.dimen.padding_detail_content_horizontal))
+                            )
+                        }
+                        else if(!selectedRecipe.recipe.favorite) {
+                            Icon(
+                                imageVector = Icons.Filled.FavoriteBorder,
+                                contentDescription = stringResource(R.string.fav_button_unfilled),
+                                modifier = Modifier
+                                    .size(dimensionResource(R.dimen.padding_detail_content_horizontal))
+                            )
+                        }
+                        else {
+                            Icon(
+                                imageVector = Icons.Filled.Favorite,
+                                tint = Color.Red,
+                                contentDescription = stringResource(R.string.fav_button_filled),
+                                modifier = Modifier
+                                    .size(dimensionResource(R.dimen.padding_detail_content_horizontal))
+                            )
+                        }
                     }
                 }
             }
