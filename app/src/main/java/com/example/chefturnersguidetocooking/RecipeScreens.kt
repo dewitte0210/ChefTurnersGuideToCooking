@@ -3,16 +3,18 @@ package com.example.chefturnersguidetocooking
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,8 +23,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +36,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,9 +44,6 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -55,22 +56,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.chefturnersguidetocooking.data.ExamplesDataProvider
-import com.example.chefturnersguidetocooking.model.Recipes
-import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
-import com.example.chefturnersguidetocooking.RecipeContentType
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import com.example.chefturnersguidetocooking.RecipeViewModel
-import androidx.navigation.compose.rememberNavController
 import com.example.chefturnersguidetocooking.database.DatabaseViewModel
 import com.example.chefturnersguidetocooking.database.Recipe
 import com.example.chefturnersguidetocooking.database.SingleRecipeAllInfo
+
 import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
 
 
@@ -83,7 +75,8 @@ fun RecipeApp(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
     navController: NavController,
-    dbViewModel: DatabaseViewModel
+    dbViewModel: DatabaseViewModel,
+    displayFavorite: Boolean
 ) {
     val viewModel: RecipeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -108,6 +101,13 @@ fun RecipeApp(
         }
     ) { innerPadding ->
         if (contentType == RecipeContentType.ListAndDetail) {
+            Image(
+                painter = painterResource(id = R.drawable.backg),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds,
+                alpha = 0.6f
+            )
             RecipeListAndDetail(
                 recipes = dbState.value.recipes,
                 selectedRecipe = dbState.value.curRecipe!!,
@@ -116,10 +116,19 @@ fun RecipeApp(
                 },
                 onBackPressed = onBackPressed,
                 contentPadding = innerPadding,
+                dbViewModel = dbViewModel,
+                displayFavorite = displayFavorite,
                 modifier = Modifier.fillMaxWidth()
             )
         } else {
             if (uiState.isShowingListPage) {
+                Image(
+                    painter = painterResource(id = R.drawable.backg),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds,
+                    alpha = 0.6f
+                )
                 RecipesList(
                     recipes = dbState.value.recipes,
                     onClick = {
@@ -128,6 +137,7 @@ fun RecipeApp(
                     },
                     modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium)),
                     contentPadding = innerPadding,
+                    displayFavorite = displayFavorite
                 )
             } else {
                 RecipesDetail(
@@ -135,7 +145,8 @@ fun RecipeApp(
                     contentPadding = innerPadding,
                     onBackPressed = {
                         viewModel.navigateToListPage()
-                    }
+                    },
+                    dbViewModel = dbViewModel
                 )
             }
         }
@@ -152,17 +163,6 @@ fun RecipeAppBar(
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
-    var checked by remember { mutableStateOf(true) }
-    val icon: (@Composable () -> Unit)? = if (checked) {
-        {
-            Icon(
-                imageVector = Icons.Filled.FavoriteBorder,
-                contentDescription = stringResource(R.string.fav_button)
-            )
-        }
-    } else {
-        null
-    }
     val isShowingDetailPage = windowSize != WindowWidthSizeClass.Expanded && !isShowingListPage
     TopAppBar(
         title = {
@@ -189,23 +189,13 @@ fun RecipeAppBar(
         } else {
             { Box {} }
         },
-        actions = if (isShowingDetailPage) {
-            {
-                Switch(
-                    checked = checked,
-                    onCheckedChange = { checked = it },
-                    thumbContent = icon
-                )
-            }
-        } else {
-            { Box {} }
-        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
         modifier = modifier,
     )
 }
+
 
 @Composable
 fun BottomNavigation(
@@ -216,6 +206,8 @@ fun BottomNavigation(
         color = md_theme_light_primary,
         contentColor = contentColorFor(md_theme_light_primary),
         modifier = modifier
+            .fillMaxWidth()
+            .height(dimensionResource(R.dimen.bottom_nav_height)) // Increase the height to 72.dp or any value you prefer
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -241,21 +233,37 @@ fun BottomNavigationItem(
     item: BottomNavigationItem,
     onClick: () -> Unit
 ) {
-    // Customize this based on your UI design
-    Text(
-        text = item.label,
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-    )
+
+    item.icon(onClick)
 }
 
+sealed class BottomNavigationItem(val route: String, val icon: @Composable (onClick: () -> Unit) -> Unit) {
+    object Home : BottomNavigationItem("home", { onClick ->
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.size(dimensionResource(R.dimen.bottom_nave_size)) // Increase the size of the icon
+        ) {
+            Icon(Icons.Filled.Home, contentDescription = "Home")
+        }
+    })
 
-sealed class BottomNavigationItem(val route: String, val label: String) {
-    object Home : BottomNavigationItem("home", "Home")
-    object AddRecipes : BottomNavigationItem("add_recipes", "Add Recipes")
-    object Favorites : BottomNavigationItem("favorites", "Favorites")
+    object AddRecipes : BottomNavigationItem("add_recipes", { onClick ->
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.size(dimensionResource(R.dimen.bottom_nave_size)) // Increase the size of the icon
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = "Add Recipes")
+        }
+    })
 
+    object Favorites : BottomNavigationItem("favorite", { onClick ->
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.size(dimensionResource(R.dimen.bottom_nave_size)) // Increase the size of the icon
+        ) {
+            Icon(Icons.Filled.Favorite, contentDescription = "Favorites")
+        }
+    })
 }
 
 
@@ -294,14 +302,32 @@ private fun RecipeListItem(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = dimensionResource(R.dimen.card_text_vertical_space))
                 )
-                /*
-                Text( /// -------- Mark
-                    text = stringResource(recipes.subtitleResourceId),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 3
-                )*/
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = (recipe.servings?.toString() ?: stringResource(R.string.noNameDefault))+" "+(stringResource(R.string.servings_text)),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Spacer(Modifier.size(dimensionResource(R.dimen.padding_small)))
+                    Text(
+                        text = (recipe.calories?.toString() ?: stringResource(R.string.noNameDefault))+" "+(stringResource(R.string.calories_text)),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+                Text(
+                    text = (stringResource(R.string.prep_time_text))+" "+(recipe.prepTime ?: stringResource(R.string.noNameDefault)),
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Text(
+                    text = (stringResource(R.string.cook_time_text))+" "+(recipe.cookTime ?: stringResource(R.string.noNameDefault)),
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Text(
+                    text = (stringResource(R.string.total_time_text))+" "+(recipe.totalTime ?: stringResource(R.string.noNameDefault)),
+                    style = MaterialTheme.typography.titleSmall
+                )
                 Row {
                 }
             }
@@ -313,21 +339,21 @@ private fun RecipeListItem(
 @Composable
 private fun RecipeImageItem(recipe: Recipe, modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
+        modifier = modifier.fillMaxHeight()
     ) {
         if (recipe.image?.asImageBitmap() != null) {
             Image(
                 painter =  BitmapPainter(recipe.image.asImageBitmap()),
                 contentDescription = null,
                 alignment = Alignment.Center,
-                contentScale = ContentScale.FillWidth
+                modifier = Modifier.fillMaxSize()
             )
         } else {
             Image(
                 painter = painterResource(R.drawable.chef),
                 contentDescription = null,
                 alignment = Alignment.Center,
-                contentScale = ContentScale.FillWidth
+                modifier = Modifier.fillMaxSize()
             )
         }
     }
@@ -338,7 +364,8 @@ private fun RecipesList(
     recipes: List<Recipe>,
     onClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues(dimensionResource(R.dimen.non_existent)),
+    displayFavorite: Boolean
 ) {
     LazyColumn(
         contentPadding = contentPadding,
@@ -346,10 +373,17 @@ private fun RecipesList(
         modifier = modifier.padding(top = dimensionResource(R.dimen.padding_medium)),
     ) {
         items(recipes, key = { recipe -> recipe.rid }) { recipe ->
-            RecipeListItem(
-                recipe = recipe,
-                onItemClick = onClick
-            )
+            if(displayFavorite && recipe.favorite) {
+                RecipeListItem(
+                    recipe = recipe,
+                    onItemClick = onClick
+                )
+            } else if (!displayFavorite){
+                RecipeListItem(
+                    recipe = recipe,
+                    onItemClick = onClick
+                )
+            }
         }
     }
 }
@@ -367,6 +401,7 @@ private fun RecipesDetail(
     selectedRecipe: SingleRecipeAllInfo?,
     onBackPressed: () -> Unit,
     contentPadding: PaddingValues,
+    dbViewModel: DatabaseViewModel,
     modifier: Modifier = Modifier
 ) {
     BackHandler {
@@ -427,9 +462,54 @@ private fun RecipesDetail(
                         modifier = Modifier
                             .padding(horizontal = dimensionResource(R.dimen.padding_small))
                     )
+
                     Row(
                         modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
                     ) {
+                    }
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_small)),
+                    ) {
+                    IconButton(onClick = {
+                        if(!selectedRecipe!!.recipe!!.favorite) {
+                            dbViewModel.toggleFavoriteRecipe(selectedRecipe.recipe!!.rid, true)
+                        }
+                        else {
+                            dbViewModel.toggleFavoriteRecipe(selectedRecipe.recipe!!.rid, false)
+                        }
+                    },
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.padding_detail_content_horizontal))
+                    ) {
+                        if(selectedRecipe?.recipe?.favorite == null) {
+                            Icon(
+                                imageVector = Icons.Filled.FavoriteBorder,
+                                contentDescription = stringResource(R.string.fav_button_unfilled),
+                                modifier = Modifier
+                                    .size(dimensionResource(R.dimen.padding_detail_content_horizontal))
+                            )
+                        }
+                        else if(!selectedRecipe.recipe.favorite) {
+                            Icon(
+                                imageVector = Icons.Filled.FavoriteBorder,
+                                contentDescription = stringResource(R.string.fav_button_unfilled),
+                                modifier = Modifier
+                                    .size(dimensionResource(R.dimen.padding_detail_content_horizontal))
+                            )
+                        }
+                        else {
+                            Icon(
+                                imageVector = Icons.Filled.Favorite,
+                                tint = Color.Red,
+                                contentDescription = stringResource(R.string.fav_button_filled),
+                                modifier = Modifier
+                                    .size(dimensionResource(R.dimen.padding_detail_content_horizontal))
+                            )
+                        }
                     }
                 }
             }
@@ -524,8 +604,10 @@ private fun RecipeListAndDetail(
     selectedRecipe: SingleRecipeAllInfo?,
     onClick: (Recipe) -> Unit,
     onBackPressed: () -> Unit,
+    dbViewModel: DatabaseViewModel,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues(dimensionResource(R.dimen.non_existent)),
+    displayFavorite: Boolean
 ) {
     Row(
         modifier = modifier
@@ -534,6 +616,7 @@ private fun RecipeListAndDetail(
             recipes = recipes,
             onClick = onClick,
             contentPadding = contentPadding, // Use contentPadding here
+            displayFavorite = displayFavorite,
             modifier = Modifier
                 .weight(2f)
                 .padding(horizontal = dimensionResource(R.dimen.padding_medium))
@@ -543,49 +626,8 @@ private fun RecipeListAndDetail(
             modifier = Modifier.weight(3f),
             contentPadding = contentPadding, // Use contentPadding here
             onBackPressed = onBackPressed,
+            dbViewModel = dbViewModel
+
         )
     }
 }
-
-/* Preview functions that dont work now that database is integrated
-@Preview
-@Composable
-fun RecipesListItemPreview() {
-    RecipeTheme {
-        RecipeListItem(
-            recipe = ExamplesDataProvider.defaultRecipe,
-            onItemClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun RecipesListPreview() {
-    RecipeTheme {
-        Surface {
-            RecipesList(
-                recipes = ExamplesDataProvider.getRecipesData(),
-                onClick = {},
-            )
-        }
-    }
-}
-
-@Preview(device = Devices.TABLET)
-@Composable
-fun RecipesListAndDetailsPreview() {
-    RecipeTheme {
-        Surface {
-            RecipeListAndDetail(
-                recipes = ExamplesDataProvider.getRecipesData(),
-                selectedRecipes = ExamplesDataProvider.getRecipesData().getOrElse(0) {
-                    ExamplesDataProvider.defaultRecipe
-                },
-                onClick = {},
-                onBackPressed = {},
-            )
-        }
-    }
-}
-*/

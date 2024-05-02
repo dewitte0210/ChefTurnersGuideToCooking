@@ -16,7 +16,7 @@ class DatabaseRepository (
     = ingredientDao.getAllIngredients()
     override fun getIngredient(ingredientName: String): Flow<List<Ingredient>>
     = ingredientDao.getIngredient(ingredientName)
-    override suspend fun insertIngredient(ingr: Ingredient)
+    override suspend fun insertIngredient(ingr: Ingredient): Long
     = ingredientDao.insertIngredient(ingr)
     override suspend fun deleteIngredient(ingr: Ingredient)
     = ingredientDao.deleteIngredient(ingr)
@@ -26,7 +26,7 @@ class DatabaseRepository (
     = measurementDao.getAllMeasurements()
     override fun getMeasurement(measurementName: String): Flow<List<Measurement>>
     = measurementDao.getMeasurement(measurementName)
-    override suspend fun insertMeasurement(meas: Measurement)
+    override suspend fun insertMeasurement(meas: Measurement): Long
     = measurementDao.insertMeasurement(meas)
     override suspend fun deleteMeasurement(meas: Measurement)
     = measurementDao.deleteMeasurement(meas)
@@ -34,9 +34,9 @@ class DatabaseRepository (
     //Recipe Queries
     override fun getAllRecipes(): Flow<List<Recipe>>
     = recipeDao.getAllRecipes()
-    override fun updateFav(fav: Boolean, rid: Long)
+    override suspend fun updateFav(fav: Boolean, rid: Long)
     = recipeDao.updateFav(fav, rid)
-    override suspend fun insertRecipe(rec: Recipe)
+    override suspend fun insertRecipe(rec: Recipe): Long
     = recipeDao.insertRecipe(rec)
     override suspend fun deleteRecipe(rec: Recipe)
     = recipeDao.deleteRecipe(rec)
@@ -62,7 +62,7 @@ class DatabaseRepository (
     = dishTypeDao.getAllTypes()
     override fun getType(typeName: String): Flow<List<DishType>>
     = dishTypeDao.getType(typeName)
-    override suspend fun insertType(dishType: DishType)
+    override suspend fun insertType(dishType: DishType): Long
     = dishTypeDao.insertType(dishType)
     override suspend fun deleteType(dishType: DishType)
     = dishTypeDao.deleteType(dishType)
@@ -70,6 +70,8 @@ class DatabaseRepository (
     // Query Single Recipe
     override fun getSingleRecipe(recipeID: Long): Flow<SingleRecipeAllInfo>
        = singleRecipeDao.getSingleRecipe(recipeID)
+
+
     companion object {
         private var repository: DatabaseRepositoryInterface? = null
         fun getRepository(recipeDatabase: RecipeDatabase):

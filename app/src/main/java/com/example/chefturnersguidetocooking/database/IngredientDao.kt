@@ -15,8 +15,7 @@ interface IngredientDao {
     fun getIngredient(ingredientName: String): Flow<List<Ingredient>>
 
     @Insert
-    suspend fun insertIngredient(
-        ingr: Ingredient)
+    suspend fun insertIngredient(ingr: Ingredient): Long
 
     @Delete
     suspend fun deleteIngredient(

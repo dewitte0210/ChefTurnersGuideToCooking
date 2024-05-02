@@ -1,17 +1,21 @@
 package com.example.chefturnersguidetocooking
 
-//import com.example.chefturnersguidetocooking.ui.theme.ChefTurnersGuideToCookingTheme
+
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,15 +42,12 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun RecipeAppContent() {
         RecipeTheme {
-            // val layoutDirection = LocalLayoutDirection.current // Not sure what this is for, never used
             val navController = rememberNavController()
 
             Scaffold(
                 modifier = Modifier.fillMaxSize(), // Ensure the Scaffold fills the entire screen
                 content = {
-                    val onBackPressed: () -> Unit = {
-                        // Define your logic for back button press here
-                    }
+                    val onBackPressed: () -> Unit = {}
                     val database = RecipeDatabase.getInstance(applicationContext)
                     val repository = DatabaseRepository.getRepository(database)
                     val dbViewModel = DatabaseViewModel(repository)
@@ -58,12 +59,25 @@ class MainActivity : ComponentActivity() {
                                 windowSize = windowSize, // Define your logic for windowSize here
                                 onBackPressed = onBackPressed,
                                 navController = navController,
-                                dbViewModel = dbViewModel
+                                dbViewModel = dbViewModel,
+                                displayFavorite = false
                             )
                         }
+                        composable("favorite"){
+                            RecipeApp(
+                                windowSize = windowSize, // Define your logic for windowSize here
+                                onBackPressed = onBackPressed,
+                                navController = navController,
+                                dbViewModel = dbViewModel,
+                                displayFavorite = true
+                            )
+                        }
+                        composable("add_recipes") { AddingView(
+                            dbViewModel
+                        ) }
                         composable("add_recipes") {
                             // Commenting out the adding view due to deprecated method
-                            //AddingView()
+                            AddingView(dbViewModel = dbViewModel)
                              }
                         composable("favorites") { FavoritesView() }
                     }

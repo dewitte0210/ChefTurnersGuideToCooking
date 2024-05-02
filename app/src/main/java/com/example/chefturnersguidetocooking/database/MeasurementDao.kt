@@ -15,9 +15,7 @@ interface MeasurementDao {
     fun getMeasurement(measurementName: String): Flow<List<Measurement>>
 
     @Insert
-    suspend fun insertMeasurement(
-        meas: Measurement
-    )
+    suspend fun insertMeasurement(meas: Measurement): Long
 
     @Delete
     suspend fun deleteMeasurement(
