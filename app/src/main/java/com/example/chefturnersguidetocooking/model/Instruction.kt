@@ -5,5 +5,5 @@ package com.example.chefturnersguidetocooking.model
  */
 data class Instruction(
     var stepNum: Int,
-    val instruction: String
+    var instruction: String
 )
