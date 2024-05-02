@@ -114,14 +114,14 @@ fun RecipeApp(
             BottomNavigation(navController = navController)
         }
     ) { innerPadding ->
-        Image(
-            painter = painterResource(id = R.drawable.backg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds,
-            alpha = 0.6f
-        )
         if (contentType == RecipeContentType.ListAndDetail) {
+            Image(
+                painter = painterResource(id = R.drawable.backg),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds,
+                alpha = 0.6f
+            )
             RecipeListAndDetail(
                 recipes = dbState.value.recipes,
                 selectedRecipe = dbState.value.curRecipe!!,
@@ -136,6 +136,13 @@ fun RecipeApp(
             )
         } else {
             if (uiState.isShowingListPage) {
+                Image(
+                    painter = painterResource(id = R.drawable.backg),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds,
+                    alpha = 0.6f
+                )
                 RecipesList(
                     recipes = dbState.value.recipes,
                     onClick = {
