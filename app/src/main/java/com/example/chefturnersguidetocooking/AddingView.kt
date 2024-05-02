@@ -70,6 +70,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.chefturnersguidetocooking.database.DatabaseViewModel
+import com.example.chefturnersguidetocooking.database.DishType
+import com.example.chefturnersguidetocooking.database.Recipe
 import com.example.chefturnersguidetocooking.model.Instruction
 import kotlinx.coroutines.launch
 
@@ -408,13 +410,14 @@ fun AddingView(
                         instructionList.forEach{inst ->
                             instructionString += inst.stepNum.toString() + ". " + inst.instruction + "\n"
                         }
-                        /*  dbViewModel.insertRecipe(name= nameInput,origin= originInput, favorite= false,
+                          val newRecipe = Recipe(name= nameInput,origin= originInput, favorite= false,
                               image= null, numCooked= 0, description= descriptionInput,
                               instructions= instructionString, calories= calorieInput.toInt(),
                               carbs= carbInput.toInt(),
                               fat= fatInput.toInt(), protein= proteinInput.toInt(), servings= servingsInput.toInt(),
                               prepTime= prepTimeInput, cookTime= cookTimeInput,
-                              totalTime = (prepTimeInput.toInt() + cookTimeInput.toInt()).toString())*/
+                              totalTime = (prepTimeInput.toInt() + cookTimeInput.toInt()).toString())
+                        val dishType = DishType(name = dishTypeInput)
 
                     },
                     modifier = Modifier
