@@ -112,7 +112,6 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
     var carbInput by remember { mutableStateOf("") }
     var fatInput by remember { mutableStateOf("") }
     var proteinInput by remember { mutableStateOf("") }
-    val ingredientList = remember { mutableStateListOf<String>() }
     val instructionList = remember { mutableStateListOf<Instruction>() }
     val openDialog = remember { mutableStateOf(false) }
 
@@ -245,6 +244,13 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                 ) {
                     // Sheet content
                     //List all ingredients from database
+                    Button(modifier = Modifier
+                        .fillMaxWidth(),
+                        onClick = {
+                            //createIngredient()
+                        }) {
+                        Text("Create Ingredient")
+                    }
                     Box(modifier = Modifier.background(Color.LightGray)) {
                         LazyColumn(
                             modifier = Modifier
@@ -274,13 +280,6 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                                 }
                             })
                         }
-                    }
-                    Button(modifier = Modifier
-                        .fillMaxWidth(),
-                        onClick = {
-                            //TODO Create ingredient
-                        }) {
-                        Text("Create Ingredients")
                     }
                 }
             }
@@ -503,6 +502,60 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
     }
 }
 
+//function for creating ingredient
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun createIngredient() {
+//    val openDialog = remember { mutableStateOf(false) }
+//    if (openDialog.value) {
+//        Dialog(onDismissRequest = { openDialog.value = false }) {
+//            Card(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(250.dp),
+//                shape = RoundedCornerShape(16.dp),
+//            ) {
+//                var text by remember { mutableStateOf("Enter Value") }
+//
+//                TextField(
+//                    value = text,
+//                    colors = TextFieldDefaults.colors(
+//                        focusedTextColor = Color.Black,
+//                        unfocusedTextColor = Color.DarkGray
+//                    ),
+//                    onValueChange = { text = it },
+//                    label = { Text(stringResource(id = R.string.value_of_measurment)) },
+//                    keyboardOptions = KeyboardOptions.Default.copy(
+//                        keyboardType = KeyboardType.Number,
+//                        imeAction = ImeAction.Next
+//                    )
+//                )
+//
+//                Row(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
+//                    Spacer(Modifier.weight(1f))
+//                    Button(
+//                        onClick = { openDialog.value = false },
+//                    ) {
+//                        Text("Cancel")
+//                    }
+//                    Button(
+//                        onClick = {
+//                            /* Add ingredient to list */
+//                            //text = value
+//                            //selectedText = measurement
+//                            //curIngredient = ingredient
+//                            val newIngredient = Triple(curIngredient, selectedText, text)
+//                            ingredientsList.add(newIngredient as Triple<Ingredient, Measurement, String>)
+//                            openDialog.value = false
+//                        },
+//                    ) {
+//                        Text("Add Ingredient")
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
