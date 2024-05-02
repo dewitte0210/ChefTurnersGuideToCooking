@@ -401,6 +401,7 @@ fun RecipeInstructions(
 
     Text(
         text = stringResource(R.string.recipe_instructions),
+        color = Color.White,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         modifier = modifier
