@@ -107,279 +107,310 @@ fun AddingView() {
                 containerColor = MaterialTheme.colorScheme.primary
             ),
         )
-        Column(
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.padding_large))
-                .verticalScroll(rememberScrollState())
-        )
-        {
-            AddRecipeInput(
-                label = R.string.recipe_name,
-                value = nameInput,
-                onValueChanged = { nameInput = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                modifier = Modifier
-                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                    .fillMaxWidth()
+        Box {
+            Image(
+                painter = painterResource(id = R.drawable.backg),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds,
+                alpha = 0.6f
             )
-            Button(
-                shape = RectangleShape,
-                contentPadding = PaddingValues(0.dp),
+            Column(
                 modifier = Modifier
-                    .padding(bottom = dimensionResource(R.dimen.padding_medium)),
-                /**
-                 * This is where we would add the ability
-                 * to add an image for the recipe, but for now
-                 * it's just the chef
-                 */
-                /**
-                 * This is where we would add the ability
-                 * to add an image for the recipe, but for now
-                 * it's just the chef
-                 */
-                onClick = {
-                    /*TODO*/
-                }
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.temp_recipe_image),
-                    contentDescription = "Recipe Image",
-                    contentScale = ContentScale.FillWidth,
+                    .padding(dimensionResource(R.dimen.padding_large))
+                    .verticalScroll(rememberScrollState())
+            )
+            {
+                AddRecipeInput(
+                    label = R.string.recipe_name,
+                    value = nameInput,
+                    onValueChanged = { nameInput = it },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
                     modifier = Modifier
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                         .fillMaxWidth()
                 )
-            }
-            AddRecipeInput(
-                label = R.string.recipe_origin,
-                value = originInput,
-                onValueChanged = { originInput = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                modifier = Modifier
-                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                    .fillMaxWidth()
-            )
-            AddRecipeInput(
-                label = R.string.dish_type,
-                value = dishTypeInput,
-                onValueChanged = { dishTypeInput = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            )
-            AddRecipeInput(
-                label = R.string.recipe_description,
-                value = descriptionInput,
-                onValueChanged = { descriptionInput = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                singleLine = false,
-                modifier = Modifier
-                    // .height(200.dp)
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            )
-            val sheetState = rememberModalBottomSheetState()
-            val scope = rememberCoroutineScope()
-            var showBottomSheet by remember { mutableStateOf(false) }
-            var ingredientList = ArrayList<String>()
-            ingredientList.add("Butter")
-            ingredientList.add("Milk")
-            ingredientList.add("Eggs")
-            ingredientList.add("Flour")
-            Button(
-                /**
-                 * Button that goes to the adding ingredients view
-                 */
-                /**
-                 * Button that goes to the adding ingredients view
-                 */
-                onClick = {
-                    showBottomSheet = true
-                },
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Manage Ingredients"
-                )
-            }
-
-            if (showBottomSheet) {
-                ModalBottomSheet(
-                    onDismissRequest = {
-                        showBottomSheet = false
-                    },
-                    sheetState = sheetState
+                Button(
+                    shape = RectangleShape,
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium)),
+                    /**
+                     * This is where we would add the ability
+                     * to add an image for the recipe, but for now
+                     * it's just the chef
+                     */
+                    /**
+                     * This is where we would add the ability
+                     * to add an image for the recipe, but for now
+                     * it's just the chef
+                     */
+                    /**
+                     * This is where we would add the ability
+                     * to add an image for the recipe, but for now
+                     * it's just the chef
+                     */
+                    /**
+                     * This is where we would add the ability
+                     * to add an image for the recipe, but for now
+                     * it's just the chef
+                     */
+                    onClick = {
+                        /*TODO*/
+                    }
                 ) {
-                    // Sheet content
-                    //List all ingredients from database
-                    Box(modifier = Modifier.background(Color.LightGray)) {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                        ) {
-                            items(items = ingredientList, itemContent = { item ->
-                                Log.d("COMPOSE", "This get rendered $item")
-                                when (item) {
-                                    item -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(bottom = 16.dp)
-                                                .clickable {
+                    Image(
+                        painter = painterResource(R.drawable.temp_recipe_image),
+                        contentDescription = "Recipe Image",
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+                AddRecipeInput(
+                    label = R.string.recipe_origin,
+                    value = originInput,
+                    onValueChanged = { originInput = it },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
+                    modifier = Modifier
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
+                        .fillMaxWidth()
+                )
+                AddRecipeInput(
+                    label = R.string.dish_type,
+                    value = dishTypeInput,
+                    onValueChanged = { dishTypeInput = it },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
+                )
+                AddRecipeInput(
+                    label = R.string.recipe_description,
+                    value = descriptionInput,
+                    onValueChanged = { descriptionInput = it },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
+                    singleLine = false,
+                    modifier = Modifier
+                        // .height(200.dp)
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
+                )
+                val sheetState = rememberModalBottomSheetState()
+                val scope = rememberCoroutineScope()
+                var showBottomSheet by remember { mutableStateOf(false) }
+                var ingredientList = ArrayList<String>()
+                ingredientList.add("Butter")
+                ingredientList.add("Milk")
+                ingredientList.add("Eggs")
+                ingredientList.add("Flour")
+                Button(
+                    /**
+                     * Button that goes to the adding ingredients view
+                     */
+                    /**
+                     * Button that goes to the adding ingredients view
+                     */
+                    /**
+                     * Button that goes to the adding ingredients view
+                     */
+                    /**
+                     * Button that goes to the adding ingredients view
+                     */
+                    onClick = {
+                        showBottomSheet = true
+                    },
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Manage Ingredients"
+                    )
+                }
 
-                                                    Log.d("Hobby", "Pressed Box")
-                                                }
-                                        ) {
+                if (showBottomSheet) {
+                    ModalBottomSheet(
+                        onDismissRequest = {
+                            showBottomSheet = false
+                        },
+                        sheetState = sheetState
+                    ) {
+                        // Sheet content
+                        //List all ingredients from database
+                        Box(modifier = Modifier.background(Color.LightGray)) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                            ) {
+                                items(items = ingredientList, itemContent = { item ->
+                                    Log.d("COMPOSE", "This get rendered $item")
+                                    when (item) {
+                                        item -> {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(bottom = 16.dp)
+                                                    .clickable {
+
+                                                        Log.d("Hobby", "Pressed Box")
+                                                    }
+                                            ) {
+                                                Text(
+                                                    text = item,
+                                                    style = TextStyle(fontSize = 80.sp)
+                                                )
+                                            }
+                                        }
+
+                                        else -> {
                                             Text(text = item, style = TextStyle(fontSize = 80.sp))
                                         }
                                     }
-
-                                    else -> {
-                                        Text(text = item, style = TextStyle(fontSize = 80.sp))
-                                    }
-                                }
-                            })
-                        }
-                    }
-                    Button(onClick = {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                showBottomSheet = false
+                                })
                             }
                         }
-                    }) {
-                        Text("Add Ingredients")
+                        Button(onClick = {
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    showBottomSheet = false
+                                }
+                            }
+                        }) {
+                            Text("Add Ingredients")
+                        }
                     }
                 }
-            }
-            RecipeInstructions(
-                instructionList = instructionList,
-                modifier = Modifier
-            )
-            AddRecipeInput(
-                label = R.string.prep_time,
-                value = prepTimeInput,
-                onValueChanged = { prepTimeInput = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            )
-            AddRecipeInput(
-                label = R.string.cook_time,
-                value = cookTimeInput,
-                onValueChanged = { cookTimeInput = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            )
-            AddRecipeInput(
-                label = R.string.servings,
-                value = servingsInput,
-                onValueChanged = { servingsInput = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            )
-            Text(
-                text = "Nutrition Facts (per serving)",
-                fontWeight = FontWeight.Bold,
-
-                modifier = Modifier
-            )
-            Row(
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-            ) {
-                AddRecipeInput(
-                    label = R.string.calories,
-                    value = calorieInput,
-                    onValueChanged = { calorieInput = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next
-                    ),
+                RecipeInstructions(
+                    instructionList = instructionList,
                     modifier = Modifier
-                        .fillMaxWidth(.5f)
                 )
                 AddRecipeInput(
-                    label = R.string.carbs,
-                    value = carbInput,
-                    onValueChanged = { carbInput = it },
+                    label = R.string.prep_time,
+                    value = prepTimeInput,
+                    onValueChanged = { prepTimeInput = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number,
+                        keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next
                     ),
                     modifier = Modifier
+                        .padding(bottom = 16.dp)
                         .fillMaxWidth()
                 )
-            }
-            Row(
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-            ) {
                 AddRecipeInput(
-                    label = R.string.fat,
-                    value = fatInput,
-                    onValueChanged = { fatInput = it },
+                    label = R.string.cook_time,
+                    value = cookTimeInput,
+                    onValueChanged = { cookTimeInput = it },
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number,
+                        keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next
                     ),
                     modifier = Modifier
-                        .fillMaxWidth(.5f)
-                )
-                AddRecipeInput(
-                    label = R.string.protein,
-                    value = proteinInput,
-                    onValueChanged = { proteinInput = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ),
-                    modifier = Modifier
+                        .padding(bottom = 16.dp)
                         .fillMaxWidth()
                 )
-            }
-            Button(
-                /**
-                 * The on click function will add all of the data to the database.
-                 */
-                onClick = {
-                    /*TODO*/
-                },
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            ) {
+                AddRecipeInput(
+                    label = R.string.servings,
+                    value = servingsInput,
+                    onValueChanged = { servingsInput = it },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
+                )
                 Text(
-                    text = "Add Recipe"
+                    text = "Nutrition Facts (per serving)",
+                    fontWeight = FontWeight.Bold,
+
+                    modifier = Modifier
                 )
+                Row(
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                ) {
+                    AddRecipeInput(
+                        label = R.string.calories,
+                        value = calorieInput,
+                        onValueChanged = { calorieInput = it },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth(.5f)
+                    )
+                    AddRecipeInput(
+                        label = R.string.carbs,
+                        value = carbInput,
+                        onValueChanged = { carbInput = it },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                ) {
+                    AddRecipeInput(
+                        label = R.string.fat,
+                        value = fatInput,
+                        onValueChanged = { fatInput = it },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth(.5f)
+                    )
+                    AddRecipeInput(
+                        label = R.string.protein,
+                        value = proteinInput,
+                        onValueChanged = { proteinInput = it },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+                Button(
+                    /**
+                     * The on click function will add all of the data to the database.
+                     */
+                    /**
+                     * The on click function will add all of the data to the database.
+                     */
+                    onClick = {
+                        /*TODO*/
+                    },
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Add Recipe"
+                    )
+                }
             }
         }
     }

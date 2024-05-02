@@ -56,13 +56,6 @@ class MainActivity : ComponentActivity() {
 
                     // Use Box to add the background image as the first child
                     Box(modifier = Modifier.fillMaxSize()) {
-                        Image(
-                            painter = painterResource(id = R.drawable.backg),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.FillBounds,
-                            alpha = 0.6f
-                        )
 
                         // Define your content inside the Box
                         NavHost(navController = navController, startDestination = "home") {
