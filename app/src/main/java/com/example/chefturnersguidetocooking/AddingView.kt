@@ -364,7 +364,7 @@ fun AddingView() {
                 onClick = {
                     /*TODO*/
                 }, modifier = Modifier
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 52.dp)
                     .fillMaxWidth()
             ) {
                 Text(
