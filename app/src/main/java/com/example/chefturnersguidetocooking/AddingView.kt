@@ -95,7 +95,6 @@ fun AddingView() {
         modifier = Modifier
             .fillMaxSize()
             .padding(dimensionResource(R.dimen.padding_medium)),
-        contentAlignment = Alignment.Center
     ) {
         TopAppBar(
             title = {
