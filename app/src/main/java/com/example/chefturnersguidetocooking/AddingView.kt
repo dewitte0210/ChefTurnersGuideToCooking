@@ -69,12 +69,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.chefturnersguidetocooking.database.DatabaseViewModel
 import com.example.chefturnersguidetocooking.model.Instruction
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddingView() {
+fun AddingView(
+    dbViewModel: DatabaseViewModel
+) {
 
     var nameInput by remember { mutableStateOf("") }
     var originInput by remember { mutableStateOf("") }
@@ -333,6 +336,42 @@ fun AddingView() {
                         .padding(bottom = 16.dp)
                         .fillMaxWidth()
                 )
+            }
+/*
+
+    var nameInput by remember { mutableStateOf("") }
+    var originInput by remember { mutableStateOf("") }
+    var descriptionInput by remember { mutableStateOf("") }
+    var dishTypeInput by remember { mutableStateOf("") }
+    var prepTimeInput by remember { mutableStateOf("") }
+    var servingsInput by remember { mutableStateOf("") }
+    var cookTimeInput by remember { mutableStateOf("") }
+    var calorieInput by remember { mutableStateOf("") }
+    var carbInput by remember { mutableStateOf("") }
+    var fatInput by remember { mutableStateOf("") }
+    var proteinInput by remember { mutableStateOf("") }
+    val ingredientList  = remember { mutableStateListOf<String>() }
+    val instructionList = remember { mutableStateListOf<Instruction>() }
+ */
+            Button(
+                onClick = {
+                    var instructionString = ""
+                    instructionList.forEach{inst ->
+                        instructionString += inst.stepNum.toString() + ". " + inst.instruction + "\n"
+                    }
+                  /*  dbViewModel.insertRecipe(name= nameInput,origin= originInput, favorite= false,
+                        image= null, numCooked= 0, description= descriptionInput,
+                        instructions= instructionString, calories= calorieInput.toInt(),
+                        carbs= carbInput.toInt(),
+                        fat= fatInput.toInt(), protein= proteinInput.toInt(), servings= servingsInput.toInt(),
+                        prepTime= prepTimeInput, cookTime= cookTimeInput,
+                        totalTime = (prepTimeInput.toInt() + cookTimeInput.toInt()).toString())*/
+
+                },
+                modifier = Modifier
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
+                    .fillMaxWidth()
+            ) {
                 Text(
                     text = "Nutrition Facts (per serving)",
                     fontWeight = FontWeight.Bold,
@@ -712,8 +751,10 @@ fun AddRecipeInput(
     )
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun ScreenPreview() {
     AddingView()
 }
+*/

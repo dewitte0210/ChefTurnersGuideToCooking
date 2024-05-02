@@ -1,20 +1,16 @@
 package com.example.chefturnersguidetocooking.database
 
 import android.graphics.Bitmap
-import android.media.Image
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.sql.Blob
 
 class DatabaseViewModel(
     repository: DatabaseRepositoryInterface
@@ -41,7 +37,7 @@ class DatabaseViewModel(
         started = SharingStarted.WhileSubscribed(),
         initialValue = listOf()
     )
-    private val _dishTypes = dbRepository.getAllRecipeDishTypes().stateIn(
+    private val _dishTypes = dbRepository.getAllTypes().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = listOf()
@@ -76,7 +72,7 @@ class DatabaseViewModel(
     )
 
     //Inserts
-    fun insertRecipe(name: String, origin: String, favorite: Boolean, image: Bitmap,
+    fun insertRecipe(name: String, origin: String, favorite: Boolean, image: Bitmap?,
                      numCooked: Int, description: String, instructions: String, calories: Int,
                      carbs: Int, fat: Int, protein: Int, servings: Int, prepTime: String, cookTime: String, totalTime: String){
         val recipe = Recipe(name = name, origin = origin, favorite = favorite, image = image,
@@ -110,12 +106,43 @@ class DatabaseViewModel(
             dbRepository.updateFav(fav, id)
         }
     }
-   /*
     fun insertDishType(name: String){
-        val dishType = RecipeDishType(name = name)
+        val dishType = DishType(name = name)
         viewModelScope.launch {
-            dbRepository.insertRecipeDishType(dishType)
+            dbRepository.insertType(dishType)
         }
     }
-*/
+
+    fun insertWholeRecipe(recipe: Recipe,ingrMeasurements: List<Triple<Ingredient, Measurement, String>>,
+                          dishType: DishType){
+       viewModelScope.launch{
+           val recipeId = dbRepository.insertRecipe(recipe)
+           ingrMeasurements.forEach{triple ->
+               var ingredientID: Long = -1
+               _dbState.value.ingredients.forEach{ingredient ->
+                   if(triple.first.name == ingredient.name){
+                       ingredientID = ingredient.iid
+                   }
+               }
+               if(ingredientID == -1L){
+                   ingredientID = dbRepository.insertIngredient(triple.first)
+               }
+               val newRecipeIngredient = RecipeIngredient(rid = recipeId,iid = ingredientID,
+                   mid = triple.second.mid, triple.third.toDouble(), "")
+               dbRepository.insertRecipeIngredient(newRecipeIngredient)
+           }
+
+           var typeID: Long = -1
+           _dbState.value.dishTypes.forEach{type ->
+               if(type.name == dishType.name){
+                    typeID = type.dtid
+               }
+           }
+           if(typeID == -1L){
+               typeID = dbRepository.insertType(dishType)
+           }
+           val newDishType = RecipeDishType(recipeId, typeID)
+           dbRepository.insertRecipeDishType(newDishType)
+       }
+    }
 }

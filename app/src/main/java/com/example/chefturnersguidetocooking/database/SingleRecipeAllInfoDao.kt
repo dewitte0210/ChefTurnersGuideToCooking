@@ -1,6 +1,7 @@
 package com.example.chefturnersguidetocooking.database
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
@@ -19,4 +20,5 @@ interface SingleRecipeAllInfoDao {
             "JOIN DishType dt ON dt.dtid = rdt.dtid " +
             "WHERE r.rid = :recipeID")
     fun getSingleRecipe(recipeID: Long): Flow<SingleRecipeAllInfo>
+
 }

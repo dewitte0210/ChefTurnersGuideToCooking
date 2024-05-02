@@ -15,7 +15,7 @@ interface DishTypeDao {
     fun getType(typeName: String): Flow<List<DishType>>
 
     @Insert
-    suspend fun insertType(dishType: DishType)
+    suspend fun insertType(dishType: DishType): Long
 
     @Delete
     suspend fun deleteType(dishType: DishType)

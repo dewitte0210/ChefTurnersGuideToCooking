@@ -15,7 +15,7 @@ interface RecipeDao {
     suspend fun updateFav(fav: Boolean, rid: Long)
 
     @Insert
-    suspend fun insertRecipe(rec: Recipe)
+    suspend fun insertRecipe(rec: Recipe): Long
 
     @Delete
     suspend fun deleteRecipe(rec: Recipe)

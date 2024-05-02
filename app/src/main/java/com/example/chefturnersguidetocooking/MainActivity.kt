@@ -53,32 +53,28 @@ class MainActivity : ComponentActivity() {
                     val dbViewModel = DatabaseViewModel(repository)
                     val windowSize: WindowWidthSizeClass =
                         WindowWidthSizeClass.Compact // Define your logic for windowSize here
-
-                    // Use Box to add the background image as the first child
-                    Box(modifier = Modifier.fillMaxSize()) {
-
-                        // Define your content inside the Box
-                        NavHost(navController = navController, startDestination = "home") {
-                            composable("home") {
-                                RecipeApp(
-                                    windowSize = windowSize, // Define your logic for windowSize here
-                                    onBackPressed = onBackPressed,
-                                    navController = navController,
-                                    dbViewModel = dbViewModel,
-                                    displayFavorite = false
-                                )
-                            }
-                            composable("favorite"){
-                                RecipeApp(
-                                    windowSize = windowSize, // Define your logic for windowSize here
-                                    onBackPressed = onBackPressed,
-                                    navController = navController,
-                                    dbViewModel = dbViewModel,
-                                    displayFavorite = true
-                                )
-                            }
-                            composable("add_recipes") { AddingView() }
+                    NavHost(navController = navController, startDestination = "home") {
+                        composable("home") {
+                            RecipeApp(
+                                windowSize = windowSize, // Define your logic for windowSize here
+                                onBackPressed = onBackPressed,
+                                navController = navController,
+                                dbViewModel = dbViewModel,
+                                displayFavorite = false
+                            )
                         }
+                        composable("favorite"){
+                            RecipeApp(
+                                windowSize = windowSize, // Define your logic for windowSize here
+                                onBackPressed = onBackPressed,
+                                navController = navController,
+                                dbViewModel = dbViewModel,
+                                displayFavorite = true
+                            )
+                        }
+                        composable("add_recipes") { AddingView(
+                            dbViewModel
+                        ) }
                     }
                 },
                 bottomBar = {

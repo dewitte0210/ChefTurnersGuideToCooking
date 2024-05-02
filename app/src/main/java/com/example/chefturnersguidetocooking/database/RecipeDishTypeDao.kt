@@ -11,6 +11,7 @@ interface RecipeDishTypeDao {
     @Query("SELECT * FROM RecipeDishType")
     fun getAllRecipeDishTypes(): Flow<List<RecipeDishType>>
 
+
     @Insert
     suspend fun insertRecipeDishType(recDishType: RecipeDishType)
 
