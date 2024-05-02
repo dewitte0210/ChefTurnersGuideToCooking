@@ -167,13 +167,13 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                     /*TODO*/
                 }
             ) {
-//                Image(
-//                    painter = painterResource(R.drawable.temp_recipe_image),
-//                    contentDescription = "Recipe Image",
-//                    contentScale = ContentScale.FillWidth,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                )
+                Image(
+                    painter = painterResource(R.drawable.temp_recipe_image),
+                    contentDescription = "Recipe Image",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
             }
             AddRecipeInput(
                 label = R.string.recipe_origin,
@@ -185,18 +185,6 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                 ),
                 modifier = Modifier
                     .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                    .fillMaxWidth()
-            )
-            AddRecipeInput(
-                label = R.string.dish_type,
-                value = dishTypeInput,
-                onValueChanged = { dishTypeInput = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
                     .fillMaxWidth()
             )
             AddRecipeInput(
@@ -226,12 +214,11 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                     .fillMaxWidth()
             )
             val sheetState = rememberModalBottomSheetState()
-            val scope = rememberCoroutineScope()
             var showBottomSheet by remember { mutableStateOf(false) }
             var possibleIngredients = ArrayList<Ingredient>(dbValues.ingredients)
             var ingredientsList = ArrayList<Triple<Ingredient,Measurement,String>>()
             var measureList = ArrayList<Measurement>(dbValues.measurements)
-            var curIngredient = possibleIngredients[0]
+            var curIngredient: Ingredient? = null
             dbValues.measurements
 
             Button(
@@ -387,7 +374,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                                     //selectedText = measurement
                                     //curIngredient = ingredient
                                     val newIngredient = Triple(curIngredient, selectedText, text)
-                                    ingredientsList.add(newIngredient)
+                                    ingredientsList.add(newIngredient as Triple<Ingredient, Measurement, String>)
                                     openDialog.value = false
                                 },
                             ) {
