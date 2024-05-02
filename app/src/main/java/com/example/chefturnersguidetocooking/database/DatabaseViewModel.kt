@@ -133,7 +133,7 @@ class DatabaseViewModel(
            }
 
            var typeID: Long = -1
-           _dbState.value.dishTypes.forEach{type ->
+           dbState.value.dishTypes.forEach{type ->
                if(type.name == dishType.name){
                     typeID = type.dtid
                }
