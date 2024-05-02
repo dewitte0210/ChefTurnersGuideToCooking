@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -300,6 +301,32 @@ private fun RecipeListItem(
                     text = recipe.name ?: stringResource(R.string.noNameDefault),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = dimensionResource(R.dimen.card_text_vertical_space))
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = (recipe.servings?.toString() ?: stringResource(R.string.noNameDefault))+" "+(stringResource(R.string.servings_text)),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Spacer(Modifier.size(dimensionResource(R.dimen.padding_small)))
+                    Text(
+                        text = (recipe.calories?.toString() ?: stringResource(R.string.noNameDefault))+" "+(stringResource(R.string.calories_text)),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+                Text(
+                    text = (stringResource(R.string.prep_time_text))+" "+(recipe.prepTime ?: stringResource(R.string.noNameDefault)),
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Text(
+                    text = (stringResource(R.string.cook_time_text))+" "+(recipe.cookTime ?: stringResource(R.string.noNameDefault)),
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Text(
+                    text = (stringResource(R.string.total_time_text))+" "+(recipe.totalTime ?: stringResource(R.string.noNameDefault)),
+                    style = MaterialTheme.typography.titleSmall
                 )
                 /*
                 Text( /// -------- Mark
