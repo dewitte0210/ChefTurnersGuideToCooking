@@ -91,8 +91,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.chefturnersguidetocooking.database.DatabaseViewModel
+import com.example.chefturnersguidetocooking.database.DishType
 import com.example.chefturnersguidetocooking.database.Ingredient
 import com.example.chefturnersguidetocooking.database.Measurement
+import com.example.chefturnersguidetocooking.database.Recipe
 import com.example.chefturnersguidetocooking.database.RecipeIngredient
 import com.example.chefturnersguidetocooking.model.Instruction
 import kotlinx.coroutines.launch
@@ -115,6 +117,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
     val ingredientList = remember { mutableStateListOf<String>() }
     val instructionList = remember { mutableStateListOf<Instruction>() }
     val openDialog = remember { mutableStateOf(false) }
+    var curIngredient: Ingredient? by remember{mutableStateOf(null)}
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -223,11 +226,9 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                 )
                 val sheetState = rememberModalBottomSheetState()
                 var showBottomSheet by remember { mutableStateOf(false) }
-                var possibleIngredients = ArrayList<Ingredient>(dbValues.ingredients)
-                var ingredientsList = ArrayList<Triple<Ingredient, Measurement, String>>()
+                var possibleIngredients =  ArrayList<Ingredient>(dbValues.ingredients)
+                var ingredientsList = remember{ArrayList<Triple<Ingredient, Measurement, String>>()}
                 var measureList = ArrayList<Measurement>(dbValues.measurements)
-                var curIngredient: Ingredient? = null
-                dbValues.measurements
 
                 Button(
                     /**
@@ -515,7 +516,22 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                      * The on click function will add all of the data to the database.
                      */
                     onClick = {
-                        /*TODO*/
+                        var instructionString = ""
+                        instructionList.forEach{inst ->
+                            instructionString += inst.stepNum.toString() + ". " + inst.instruction + "\n"
+                        }
+                        val newRecipe = Recipe(name= nameInput,origin= originInput, favorite= false,
+                          image= null, numCooked= 0, description= descriptionInput,
+                          instructions= instructionString, calories= calorieInput.toInt(),
+                          carbs= carbInput.toInt(),
+                          fat= fatInput.toInt(), protein= proteinInput.toInt(), servings= servingsInput.toInt(),
+                          prepTime= prepTimeInput, cookTime= cookTimeInput,
+                          totalTime = (prepTimeInput.toInt() + cookTimeInput.toInt()).toString())
+                        val dishType = DishType(name = dishTypeInput)
+                        dbViewModel.insertWholeRecipe(recipe = newRecipe,
+                            ingrMeasurements= ingredientsList,
+                            dishType = dishType)
+
                     }, modifier = Modifier
                         .padding(bottom = 52.dp)
                         .fillMaxWidth()
