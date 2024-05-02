@@ -40,4 +40,8 @@
     <string name="protein">Protein</string>
     <string name="add_a_new_recipe">Add a New Recipe</string>
     <string name="noNameDefault">N/A</string>
+    <string name="prep_time">Prep Time</string>
+    <string name="servings">Servings</string>
+    <string name="cook_time">Cook Time</string>
+    <string name="dish_type">Dish Type</string>
 </resources>

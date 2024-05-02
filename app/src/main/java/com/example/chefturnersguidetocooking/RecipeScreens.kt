@@ -3,7 +3,6 @@ package com.example.chefturnersguidetocooking
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,7 +64,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.chefturnersguidetocooking.data.ExamplesDataProvider
+import com.example.chefturnersguidetocooking.database.DatabaseViewModel
 import com.example.chefturnersguidetocooking.model.Recipes
 import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
 import com.example.chefturnersguidetocooking.RecipeContentType
@@ -255,7 +256,7 @@ sealed class BottomNavigationItem(val route: String, val icon: @Composable (onCl
         }
     })
 
-    object Favorites : BottomNavigationItem("favorite", { onClick ->
+    object Favorites : BottomNavigationItem("favorites", { onClick ->
         IconButton(
             onClick = onClick,
             modifier = Modifier.size(46.dp) // Increase the size of the icon
@@ -264,7 +265,6 @@ sealed class BottomNavigationItem(val route: String, val icon: @Composable (onCl
         }
     })
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

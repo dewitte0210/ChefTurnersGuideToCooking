@@ -1,16 +1,17 @@
 package com.example.chefturnersguidetocooking
 
+import android.app.AlertDialog
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,30 +19,36 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -51,15 +58,19 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.chefturnersguidetocooking.model.Instruction
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,25 +79,22 @@ fun AddingView() {
     var nameInput by remember { mutableStateOf("") }
     var originInput by remember { mutableStateOf("") }
     var descriptionInput by remember { mutableStateOf("") }
+    var dishTypeInput by remember { mutableStateOf("") }
+    var prepTimeInput by remember { mutableStateOf("") }
+    var servingsInput by remember { mutableStateOf("") }
+    var cookTimeInput by remember { mutableStateOf("") }
     var calorieInput by remember { mutableStateOf("") }
     var carbInput by remember { mutableStateOf("") }
     var fatInput by remember { mutableStateOf("") }
     var proteinInput by remember { mutableStateOf("") }
+    val ingredientList  = remember { mutableStateListOf<String>() }
     val instructionList = remember { mutableStateListOf<Instruction>() }
-    var isCameraPermsGranted by remember { mutableStateOf(false) }
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = {isGranted ->
-            if(isGranted){
-                Log.d("TAG", "Camera $isGranted")
-                isCameraPermsGranted = true
-            }
-        })
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(dimensionResource(R.dimen.padding_medium)),
     ) {
         TopAppBar(
             title = {
@@ -100,10 +108,9 @@ fun AddingView() {
                 containerColor = MaterialTheme.colorScheme.primary
             ),
         )
-
         Column(
             modifier = Modifier
-                .padding(20.dp)
+                .padding(dimensionResource(R.dimen.padding_large))
                 .verticalScroll(rememberScrollState())
         )
         {
@@ -116,27 +123,30 @@ fun AddingView() {
                     imeAction = ImeAction.Next
                 ),
                 modifier = Modifier
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
                     .fillMaxWidth()
             )
             Button(
                 shape = RectangleShape,
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium)),
+                /**
+                 * This is where we would add the ability
+                 * to add an image for the recipe, but for now
+                 * it's just the chef
+                 */
                 /**
                  * This is where we would add the ability
                  * to add an image for the recipe, but for now
                  * it's just the chef
                  */
                 onClick = {
-                    if(!isCameraPermsGranted){
-                        launcher.launch("android.permission.CAMERA")
-                    }
+                    /*TODO*/
                 }
             ) {
                 Image(
-                    painter = painterResource(R.drawable.chef),
+                    painter = painterResource(R.drawable.temp_recipe_image),
                     contentDescription = "Recipe Image",
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
@@ -147,6 +157,18 @@ fun AddingView() {
                 label = R.string.recipe_origin,
                 value = originInput,
                 onValueChanged = { originInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
+                    .fillMaxWidth()
+            )
+            AddRecipeInput(
+                label = R.string.dish_type,
+                value = dishTypeInput,
+                onValueChanged = { dishTypeInput = it },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
@@ -165,12 +187,129 @@ fun AddingView() {
                 ),
                 singleLine = false,
                 modifier = Modifier
-                    .height(200.dp)
+                    // .height(200.dp)
                     .padding(bottom = 16.dp)
                     .fillMaxWidth()
             )
+            val sheetState = rememberModalBottomSheetState()
+            val scope = rememberCoroutineScope()
+            var showBottomSheet by remember { mutableStateOf(false) }
+            var ingredientList = ArrayList<String>()
+            ingredientList.add("Butter")
+            ingredientList.add("Milk")
+            ingredientList.add("Eggs")
+            ingredientList.add("Flour")
+            Button(
+                /**
+                 * Button that goes to the adding ingredients view
+                 */
+                /**
+                 * Button that goes to the adding ingredients view
+                 */
+                onClick = {
+                    showBottomSheet = true
+                },
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Manage Ingredients"
+                )
+            }
+
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState
+                ) {
+                    // Sheet content
+                    //List all ingredients from database
+                    Box(modifier = Modifier.background(Color.LightGray)) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                        ) {
+                            items(items = ingredientList, itemContent = { item ->
+                                Log.d("COMPOSE", "This get rendered $item")
+                                when (item) {
+                                    item -> {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(bottom = 16.dp)
+                                                .clickable {
+
+                                                    Log.d("Hobby", "Pressed Box")
+                                                }
+                                        ) {
+                                            Text(text = item, style = TextStyle(fontSize = 80.sp))
+                                        }
+                                    }
+
+                                    else -> {
+                                        Text(text = item, style = TextStyle(fontSize = 80.sp))
+                                    }
+                                }
+                            })
+                        }
+                    }
+                    Button(onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                            }
+                        }
+                    }) {
+                        Text("Add Ingredients")
+                    }
+                }
+            }
             RecipeInstructions(
                 instructionList = instructionList,
+                modifier = Modifier
+            )
+            AddRecipeInput(
+                label = R.string.prep_time,
+                value = prepTimeInput,
+                onValueChanged = { prepTimeInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            )
+            AddRecipeInput(
+                label = R.string.cook_time,
+                value = cookTimeInput,
+                onValueChanged = { cookTimeInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            )
+            AddRecipeInput(
+                label = R.string.servings,
+                value = servingsInput,
+                onValueChanged = { servingsInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            )
+            Text(
+                text = "Nutrition Facts (per serving)",
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier
             )
             Row(
@@ -227,26 +366,9 @@ fun AddingView() {
                         .fillMaxWidth()
                 )
             }
-
             Button(
                 /**
-                 * Button that goes to the adding ingredients view
-                 */
-                onClick = {
-
-                },
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Manage Ingredients"
-                )
-            }
-            Button(
-                /**
-                 * The on click function will add all of the data to
-                 * the database. This will be done as the final part of the project
+                 * The on click function will add all of the data to the database.
                  */
                 onClick = {
                     /*TODO*/
@@ -262,6 +384,8 @@ fun AddingView() {
         }
     }
 }
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeInstructions(
@@ -272,8 +396,8 @@ fun RecipeInstructions(
     var instructionsInput by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
 
-    if (steps < 1) {
-        steps = 1
+    if (steps <= instructionList.size) {
+        steps = instructionList.size + 1
     }
 
     Text(
@@ -289,17 +413,31 @@ fun RecipeInstructions(
             .height((200).dp)
     ) {
         items(instructionList, key = { Instruction -> Instruction.stepNum }) { instruction ->
+            var instructionText by remember { mutableStateOf(instruction.instruction) }
+            var alertDialogOpen by remember { mutableStateOf(false) }
+
+            fun deleteInstruction() {
+                instructionList.remove(instruction)
+                val stepNum = instruction.stepNum
+                for (step in instructionList) {
+                    if (step.stepNum > stepNum) {
+                        step.stepNum--
+                    }
+                }
+                steps--
+            }
+
+            fun editInstruction(newInstruction: String) {
+                instructionList[instruction.stepNum - 1].instruction = newInstruction
+                instructionText = newInstruction
+            }
+
             val state = rememberDismissState(
                 confirmValueChange = {
                     if (it == DismissValue.DismissedToStart) {
-                        val stepNum = instruction.stepNum
-                        for (step in instructionList) {
-                            if (step.stepNum > stepNum) {
-                                step.stepNum--
-                            }
-                        }
-                        steps--
-                        instructionList.remove(instruction)
+                        deleteInstruction()
+                    } else if (it == DismissValue.DismissedToEnd) {
+                        alertDialogOpen = true
                     }
                     false
                 }
@@ -318,11 +456,13 @@ fun RecipeInstructions(
                             .background(color)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Delete, contentDescription = "Delete",
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
                             modifier = Modifier.align(Alignment.CenterEnd)
                         )
                         Icon(
-                            imageVector = Icons.Default.Edit, contentDescription = "Edit",
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
                             modifier = Modifier.align(Alignment.CenterStart)
                         )
                     }
@@ -330,9 +470,16 @@ fun RecipeInstructions(
                 dismissContent = {
                     InstructionStep(
                         instruction = instruction,
+                        instructionText = instructionText,
+                        onValueChanged = { instructionText = it },
+                        deleteInstruction = { deleteInstruction() },
+                        editInstruction = { editInstruction(instructionText) },
+                        alertDialogOpen = alertDialogOpen,
+                        onAlertDialogOpenChanged = { alertDialogOpen = it },
                         modifier = modifier
                     )
-                })
+                }
+            )
         }
     }
 
@@ -365,27 +512,122 @@ fun RecipeInstructions(
             text = "Add a Step"
         )
     }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditInstructionDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogStep: Int,
+    dialogInput: String,
+    onValueChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Dialog(
+        onDismissRequest = {
+            onDismissRequest()
+        }
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(320.dp),
+            shape = RoundedCornerShape(16.dp),
+        ) {
+            Text(
+                text = "Edit Step $dialogStep:",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = modifier
+            )
+            AddInstructionsStep(
+                stepNum = dialogStep,
+                value = dialogInput,
+                onValueChanged = onValueChanged,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            )
+            Row(
+                modifier = modifier
+            ) {
+                TextButton(
+                    onClick = { onConfirmation() },
+                    modifier = modifier
+                ) {
+                    Text(
+                        text = "Cancel"
+                    )
+                }
+                TextButton(
+                    onClick = { onDismissRequest() },
+                    modifier = modifier
+                ) {
+                    Text(
+                        text = "Confirm"
+                    )
+                }
+            }
+        }
+    }
 }
 
 
 @Composable
 fun InstructionStep(
     instruction: Instruction,
+    instructionText: String,
+    onValueChanged: (String) -> Unit,
+    deleteInstruction: () -> Unit,
+    editInstruction: (String) -> Unit,
+    alertDialogOpen: Boolean,
+    onAlertDialogOpenChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(Color.LightGray)
     ) {
-        Text(
-            text = "Step ${instruction.stepNum}: ",
-            modifier = modifier
+        Icon(
+            imageVector = Icons.Default.Edit, contentDescription = "Edit",
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
         )
         Text(
-            text = instruction.instruction
+            text = "${instruction.stepNum}: ",
+            modifier = Modifier
         )
+        Text(
+            text = instructionText,
+            modifier = Modifier.fillMaxWidth(.9f)
+        )
+        Icon(
+            imageVector = Icons.Default.Delete, contentDescription = "Delete",
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .clickable { deleteInstruction() }
+        )
+        if (alertDialogOpen) {
+            EditInstructionDialog(
+                onDismissRequest = {
+                    onAlertDialogOpenChanged(false)
+                },
+                onConfirmation = {
+                    editInstruction(instructionText)
+                },
+                onValueChanged = onValueChanged,
+                dialogStep = instruction.stepNum,
+                dialogInput = instructionText,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     }
 }
 
@@ -395,8 +637,8 @@ fun AddInstructionsStep(
     value: String,
     onValueChanged: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
-    focusRequester: FocusRequester,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    focusRequester: FocusRequester = FocusRequester()
 ) {
     OutlinedTextField(
         value = value,
