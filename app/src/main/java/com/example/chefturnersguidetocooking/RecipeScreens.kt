@@ -3,6 +3,7 @@ package com.example.chefturnersguidetocooking
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,11 +37,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +52,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -57,11 +62,14 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.chefturnersguidetocooking.data.ExamplesDataProvider
@@ -112,7 +120,7 @@ fun RecipeApp(
                 recipes = dbState.value.recipes,
                 selectedRecipe = dbState.value.curRecipe!!,
                 onClick = {
-                   dbViewModel.updateCurRid(it.rid)
+                    dbViewModel.updateCurRid(it.rid)
                 },
                 onBackPressed = onBackPressed,
                 contentPadding = innerPadding,
@@ -141,6 +149,7 @@ fun RecipeApp(
         }
     }
 }
+
 /**
  * Composable that displays the topBar and displays back button if back navigation is possible.
  */
@@ -247,7 +256,10 @@ fun BottomNavigationItem(
     item.icon(onClick)
 }
 
-sealed class BottomNavigationItem(val route: String, val icon: @Composable (onClick: () -> Unit) -> Unit) {
+sealed class BottomNavigationItem(
+    val route: String,
+    val icon: @Composable (onClick: () -> Unit) -> Unit
+) {
     object Home : BottomNavigationItem("home", { onClick ->
         IconButton(
             onClick = onClick,
@@ -334,7 +346,7 @@ private fun RecipeImageItem(recipe: Recipe, modifier: Modifier = Modifier) {
     ) {
         if (recipe.image?.asImageBitmap() != null) {
             Image(
-                painter =  BitmapPainter(recipe.image.asImageBitmap()),
+                painter = BitmapPainter(recipe.image.asImageBitmap()),
                 contentDescription = null,
                 alignment = Alignment.Center,
                 contentScale = ContentScale.FillWidth
@@ -404,7 +416,7 @@ private fun RecipesDetail(
                     end = contentPadding.calculateEndPadding(layoutDirection)
                 )
         ) {
-            Box (){
+            Box() {
                 Box() {
                     // If there is an image display it, otherwise display the image of our
                     // beautiful chef turner
@@ -463,67 +475,69 @@ private fun RecipesDetail(
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_detail_content_vertical),
-                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                    horizontal = dimensionResource(R.dimen.padding_detail_content_horizontal)
                 )
             )
             Text(
-                text = "Servings: " + (selectedRecipe?.recipe?.servings?: ""),
+                text = "Servings: " + (selectedRecipe?.recipe?.servings ?: ""),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_small),
-                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                    horizontal = dimensionResource(R.dimen.padding_detail_content_horizontal)
                 )
             )
             Text(
-                text = "Calories: " + (selectedRecipe?.recipe?.calories?: ""),
+                text = "Calories: " + (selectedRecipe?.recipe?.calories ?: ""),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_small),
-                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                    horizontal = dimensionResource(R.dimen.padding_detail_content_horizontal)
                 )
             )
             Text(
-                text = "Carbs: " + (selectedRecipe?.recipe?.carbs?: ""),
+                text = "Carbs: " + (selectedRecipe?.recipe?.carbs ?: ""),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_small),
-                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                    horizontal = dimensionResource(R.dimen.padding_detail_content_horizontal)
                 )
             )
             Text(
-                text = "Fat: " + (selectedRecipe?.recipe?.fat?: ""),
+                text = "Fat: " + (selectedRecipe?.recipe?.fat ?: ""),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_small),
-                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                    horizontal = dimensionResource(R.dimen.padding_detail_content_horizontal)
                 )
             )
             Text(
-                text = "Protein: " + (selectedRecipe?.recipe?.protein?: ""),
+                text = "Protein: " + (selectedRecipe?.recipe?.protein ?: ""),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     vertical = dimensionResource(R.dimen.padding_small),
-                    horizontal = dimensionResource( R.dimen.padding_detail_content_horizontal)
+                    horizontal = dimensionResource(R.dimen.padding_detail_content_horizontal)
                 )
             )
-            Row(){
+            Row() {
                 // Needed to separate start and end padding to display two fields next to each other
                 Text(
                     text = "Cook Time: " + (selectedRecipe?.recipe?.cookTime ?: ""),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(PaddingValues(
-                        top = dimensionResource(R.dimen.padding_detail_content_vertical),
-                        bottom = dimensionResource(R.dimen.padding_detail_content_vertical),
-                        start = dimensionResource(R.dimen.padding_detail_content_horizontal),
-                        end = dimensionResource(R.dimen.padding_small)
-                    ))
+                    modifier = Modifier.padding(
+                        PaddingValues(
+                            top = dimensionResource(R.dimen.padding_detail_content_vertical),
+                            bottom = dimensionResource(R.dimen.padding_detail_content_vertical),
+                            start = dimensionResource(R.dimen.padding_detail_content_horizontal),
+                            end = dimensionResource(R.dimen.padding_small)
+                        )
+                    )
                 )
                 Text(
                     text = "Prep Time: " + (selectedRecipe?.recipe?.prepTime ?: ""),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(
                         PaddingValues(
-                            top =dimensionResource(R.dimen.padding_detail_content_vertical),
+                            top = dimensionResource(R.dimen.padding_detail_content_vertical),
                             bottom = dimensionResource(R.dimen.padding_detail_content_vertical),
                             start = dimensionResource(R.dimen.padding_small),
                             end = dimensionResource(R.dimen.padding_detail_content_horizontal)
@@ -563,46 +577,3 @@ private fun RecipeListAndDetail(
         )
     }
 }
-
-/* Preview functions that dont work now that database is integrated
-@Preview
-@Composable
-fun RecipesListItemPreview() {
-    RecipeTheme {
-        RecipeListItem(
-            recipe = ExamplesDataProvider.defaultRecipe,
-            onItemClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun RecipesListPreview() {
-    RecipeTheme {
-        Surface {
-            RecipesList(
-                recipes = ExamplesDataProvider.getRecipesData(),
-                onClick = {},
-            )
-        }
-    }
-}
-
-@Preview(device = Devices.TABLET)
-@Composable
-fun RecipesListAndDetailsPreview() {
-    RecipeTheme {
-        Surface {
-            RecipeListAndDetail(
-                recipes = ExamplesDataProvider.getRecipesData(),
-                selectedRecipes = ExamplesDataProvider.getRecipesData().getOrElse(0) {
-                    ExamplesDataProvider.defaultRecipe
-                },
-                onClick = {},
-                onBackPressed = {},
-            )
-        }
-    }
-}
-*/
