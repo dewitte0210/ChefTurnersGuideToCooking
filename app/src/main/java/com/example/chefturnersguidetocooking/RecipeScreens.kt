@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -87,7 +88,8 @@ fun RecipeApp(
     windowSize: WindowWidthSizeClass,
     onBackPressed: () -> Unit,
     navController: NavController,
-    dbViewModel: DatabaseViewModel
+    dbViewModel: DatabaseViewModel,
+    displayFavorite: Boolean
 ) {
     val viewModel: RecipeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -121,6 +123,7 @@ fun RecipeApp(
                 onBackPressed = onBackPressed,
                 contentPadding = innerPadding,
                 dbViewModel = dbViewModel,
+                displayFavorite = displayFavorite,
                 modifier = Modifier.fillMaxWidth()
             )
         } else {
@@ -133,6 +136,7 @@ fun RecipeApp(
                     },
                     modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium)),
                     contentPadding = innerPadding,
+                    displayFavorite = displayFavorite
                 )
             } else {
                 RecipesDetail(
@@ -251,7 +255,7 @@ sealed class BottomNavigationItem(val route: String, val icon: @Composable (onCl
         }
     })
 
-    object Favorites : BottomNavigationItem("home", { onClick ->
+    object Favorites : BottomNavigationItem("favorite", { onClick ->
         IconButton(
             onClick = onClick,
             modifier = Modifier.size(46.dp) // Increase the size of the icon
@@ -316,21 +320,21 @@ private fun RecipeListItem(
 @Composable
 private fun RecipeImageItem(recipe: Recipe, modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
+        modifier = modifier.fillMaxHeight()
     ) {
         if (recipe.image?.asImageBitmap() != null) {
             Image(
                 painter =  BitmapPainter(recipe.image.asImageBitmap()),
                 contentDescription = null,
                 alignment = Alignment.Center,
-                contentScale = ContentScale.FillBounds
+                contentScale = ContentScale.FillHeight
             )
         } else {
             Image(
                 painter = painterResource(R.drawable.chef),
                 contentDescription = null,
                 alignment = Alignment.Center,
-                contentScale = ContentScale.FillBounds
+                contentScale = ContentScale.FillHeight
             )
         }
     }
@@ -342,6 +346,7 @@ private fun RecipesList(
     onClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    displayFavorite: Boolean
 ) {
     LazyColumn(
         contentPadding = contentPadding,
@@ -349,10 +354,17 @@ private fun RecipesList(
         modifier = modifier.padding(top = dimensionResource(R.dimen.padding_medium)),
     ) {
         items(recipes, key = { recipe -> recipe.rid }) { recipe ->
-            RecipeListItem(
-                recipe = recipe,
-                onItemClick = onClick
-            )
+            if(displayFavorite && recipe.favorite) {
+                RecipeListItem(
+                    recipe = recipe,
+                    onItemClick = onClick
+                )
+            } else if (!displayFavorite){
+                RecipeListItem(
+                    recipe = recipe,
+                    onItemClick = onClick
+                )
+            }
         }
     }
 }
@@ -576,6 +588,7 @@ private fun RecipeListAndDetail(
     dbViewModel: DatabaseViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    displayFavorite: Boolean
 ) {
     Row(
         modifier = modifier
@@ -584,6 +597,7 @@ private fun RecipeListAndDetail(
             recipes = recipes,
             onClick = onClick,
             contentPadding = contentPadding, // Use contentPadding here
+            displayFavorite = displayFavorite,
             modifier = Modifier
                 .weight(2f)
                 .padding(horizontal = dimensionResource(R.dimen.padding_medium))

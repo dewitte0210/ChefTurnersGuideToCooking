@@ -58,9 +58,20 @@ class MainActivity : ComponentActivity() {
                                 windowSize = windowSize, // Define your logic for windowSize here
                                 onBackPressed = onBackPressed,
                                 navController = navController,
-                                dbViewModel = dbViewModel
+                                dbViewModel = dbViewModel,
+                                displayFavorite = false
                             )
                         }
+                        composable("favorite"){
+                            RecipeApp(
+                                windowSize = windowSize, // Define your logic for windowSize here
+                                onBackPressed = onBackPressed,
+                                navController = navController,
+                                dbViewModel = dbViewModel,
+                                displayFavorite = true
+                            )
+                        }
+
                         composable("add_recipes") { AddingView() }
                     }
                 },
