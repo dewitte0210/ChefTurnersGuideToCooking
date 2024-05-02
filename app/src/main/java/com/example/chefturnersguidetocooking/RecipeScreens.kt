@@ -207,7 +207,7 @@ fun BottomNavigation(
         contentColor = contentColorFor(md_theme_light_primary),
         modifier = modifier
             .fillMaxWidth()
-            .height(72.dp) // Increase the height to 72.dp or any value you prefer
+            .height(dimensionResource(R.dimen.bottom_nav_height)) // Increase the height to 72.dp or any value you prefer
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -241,7 +241,7 @@ sealed class BottomNavigationItem(val route: String, val icon: @Composable (onCl
     object Home : BottomNavigationItem("home", { onClick ->
         IconButton(
             onClick = onClick,
-            modifier = Modifier.size(46.dp) // Increase the size of the icon
+            modifier = Modifier.size(dimensionResource(R.dimen.bottom_nave_size)) // Increase the size of the icon
         ) {
             Icon(Icons.Filled.Home, contentDescription = "Home")
         }
@@ -250,7 +250,7 @@ sealed class BottomNavigationItem(val route: String, val icon: @Composable (onCl
     object AddRecipes : BottomNavigationItem("add_recipes", { onClick ->
         IconButton(
             onClick = onClick,
-            modifier = Modifier.size(46.dp) // Increase the size of the icon
+            modifier = Modifier.size(dimensionResource(R.dimen.bottom_nave_size)) // Increase the size of the icon
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Add Recipes")
         }
@@ -259,7 +259,7 @@ sealed class BottomNavigationItem(val route: String, val icon: @Composable (onCl
     object Favorites : BottomNavigationItem("favorite", { onClick ->
         IconButton(
             onClick = onClick,
-            modifier = Modifier.size(46.dp) // Increase the size of the icon
+            modifier = Modifier.size(dimensionResource(R.dimen.bottom_nave_size)) // Increase the size of the icon
         ) {
             Icon(Icons.Filled.Favorite, contentDescription = "Favorites")
         }
@@ -364,7 +364,7 @@ private fun RecipesList(
     recipes: List<Recipe>,
     onClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues(dimensionResource(R.dimen.non_existent)),
     displayFavorite: Boolean
 ) {
     LazyColumn(
@@ -606,7 +606,7 @@ private fun RecipeListAndDetail(
     onBackPressed: () -> Unit,
     dbViewModel: DatabaseViewModel,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues = PaddingValues(dimensionResource(R.dimen.non_existent)),
     displayFavorite: Boolean
 ) {
     Row(

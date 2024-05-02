@@ -1,6 +1,5 @@
 package com.example.chefturnersguidetocooking
 
-import android.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -28,33 +26,21 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissValue
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -67,7 +53,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -86,7 +71,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -97,7 +81,6 @@ import com.example.chefturnersguidetocooking.database.Measurement
 import com.example.chefturnersguidetocooking.database.Recipe
 import com.example.chefturnersguidetocooking.database.RecipeIngredient
 import com.example.chefturnersguidetocooking.model.Instruction
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,7 +144,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                 )
                 Button(
                     shape = RectangleShape,
-                    contentPadding = PaddingValues(0.dp),
+                    contentPadding = PaddingValues(dimensionResource(R.dimen.non_existent)),
                     modifier = Modifier
                         .padding(bottom = dimensionResource(R.dimen.padding_medium)),
                     /**
@@ -207,7 +190,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                         imeAction = ImeAction.Next
                     ),
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                         .fillMaxWidth()
                 )
                 AddRecipeInput(
@@ -220,8 +203,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                     ),
                     singleLine = false,
                     modifier = Modifier
-                        // .height(200.dp)
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                         .fillMaxWidth()
                 )
                 val sheetState = rememberModalBottomSheetState()
@@ -237,7 +219,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                     onClick = {
                         showBottomSheet = true
                     }, modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                         .fillMaxWidth()
                 ) {
                     Text(
@@ -265,10 +247,12 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                                         item -> {
                                             item.name?.let {
                                                 Text(text = it,
-                                                    style = TextStyle(fontSize = 80.sp),
+                                                    style = TextStyle(fontSize = 20.sp),
+                                                    textAlign = TextAlign.Center,
                                                     modifier = Modifier
                                                         .fillMaxWidth()
-                                                        .padding(bottom = 16.dp)
+                                                        .padding(top = dimensionResource(R.dimen.padding_small))
+                                                        .padding(bottom = dimensionResource(R.dimen.padding_small))
                                                         .clickable {
                                                             openDialog.value = true
                                                             curIngredient = item
@@ -281,7 +265,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                                             item.name?.let {
                                                 Text(
                                                     text = it,
-                                                    style = TextStyle(fontSize = 80.sp)
+                                                    style = TextStyle(fontSize = 20.sp)
                                                 )
                                             }
                                         }
@@ -304,8 +288,8 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(250.dp),
-                            shape = RoundedCornerShape(16.dp),
+                                .height(dimensionResource(R.dimen.measurment_dialog)),
+                            shape = RoundedCornerShape(dimensionResource(R.dimen.padding_medium)),
                         ) {
                             var text by remember { mutableStateOf("Enter Value") }
 
@@ -330,7 +314,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(32.dp)
+                                    .padding(dimensionResource(R.dimen.box_medium))
                             ) {
                                 ExposedDropdownMenuBox(
                                     expanded = expanded,
@@ -425,7 +409,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                         imeAction = ImeAction.Next
                     ),
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                         .fillMaxWidth()
                 )
                 AddRecipeInput(
@@ -437,7 +421,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                         imeAction = ImeAction.Next
                     ),
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                         .fillMaxWidth()
                 )
                 AddRecipeInput(
@@ -449,7 +433,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                         imeAction = ImeAction.Next
                     ),
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                         .fillMaxWidth()
                 )
                 Text(
@@ -459,7 +443,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                 )
                 Row(
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                 ) {
                     AddRecipeInput(
                         label = R.string.calories,
@@ -486,7 +470,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                 }
                 Row(
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
                 ) {
                     AddRecipeInput(
                         label = R.string.fat,
@@ -533,7 +517,7 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                             dishType = dishType)
 
                     }, modifier = Modifier
-                        .padding(bottom = 52.dp)
+                        .padding(dimensionResource(R.dimen.add_recipe_button))
                         .fillMaxWidth()
                 ) {
                     Text(
@@ -614,9 +598,9 @@ fun RecipeInstructions(
                     null -> Color.Transparent
                 }
                 Card(
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(dimensionResource(R.dimen.padding_small)),
                     modifier = modifier
-                        .padding(bottom = 8.dp)
+                        .padding(bottom = dimensionResource(R.dimen.padding_small))
                 ) {
                     Box(
                         modifier = Modifier
@@ -660,7 +644,7 @@ fun RecipeInstructions(
         ),
         focusRequester = focusRequester,
         modifier = Modifier
-            .padding(bottom = 16.dp)
+            .padding(bottom = dimensionResource(R.dimen.padding_medium))
             .fillMaxWidth()
     )
     Button(
@@ -671,7 +655,7 @@ fun RecipeInstructions(
             }
             focusRequester.requestFocus()
         }, modifier = Modifier
-            .padding(bottom = 16.dp)
+            .padding(bottom = dimensionResource(R.dimen.padding_medium))
             .fillMaxWidth()
     ) {
         Text(
@@ -694,8 +678,8 @@ fun EditInstructionDialog(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp),
-            shape = RoundedCornerShape(16.dp),
+                .height(dimensionResource(R.dimen.edit_instr_dialog)),
+            shape = RoundedCornerShape(dimensionResource(R.dimen.padding_medium)),
         ) {
             Text(
                 text = "Edit Step $dialogStep:",
@@ -712,7 +696,7 @@ fun EditInstructionDialog(
                     imeAction = ImeAction.Next
                 ),
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = dimensionResource(R.dimen.padding_medium))
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
             )
@@ -721,7 +705,7 @@ fun EditInstructionDialog(
             ) {
                 Button(
                     onClick = { onConfirmation() },
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = dimensionResource(R.dimen.padding_small))
                 ) {
                     Text(
                         text = "Confirm"
@@ -754,10 +738,10 @@ fun InstructionStep(
 ) {
 
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.padding_small)),
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp)
+            .padding(bottom = dimensionResource(R.dimen.padding_small))
     ) {
         Row(
             modifier = modifier
@@ -772,7 +756,7 @@ fun InstructionStep(
             Text(
                 text = "${instruction.stepNum}: ",
                 fontSize = 18.sp,
-                modifier = Modifier.padding(start = 4.dp)
+                modifier = Modifier.padding(start = dimensionResource(R.dimen.tiny_padding))
             )
             Text(
                 text = instructionText,
@@ -798,7 +782,7 @@ fun InstructionStep(
                     onValueChanged = onValueChanged,
                     dialogStep = instruction.stepNum,
                     dialogInput = instructionText,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
                 )
             }
         }
