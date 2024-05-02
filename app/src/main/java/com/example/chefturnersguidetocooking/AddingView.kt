@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -97,7 +99,6 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
     var carbInput by remember { mutableStateOf("") }
     var fatInput by remember { mutableStateOf("") }
     var proteinInput by remember { mutableStateOf("") }
-    val ingredientList = remember { mutableStateListOf<String>() }
     val instructionList = remember { mutableStateListOf<Instruction>() }
     val openDialog = remember { mutableStateOf(false) }
     var curIngredient: Ingredient? by remember{mutableStateOf(null)}
@@ -142,150 +143,115 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                         .padding(bottom = dimensionResource(R.dimen.padding_medium))
                         .fillMaxWidth()
                 )
-                Button(
-                    shape = RectangleShape,
-                    contentPadding = PaddingValues(dimensionResource(R.dimen.non_existent)),
-                    modifier = Modifier
-                        .padding(bottom = dimensionResource(R.dimen.padding_medium)),
-                    /**
-                     * This is where we would add the ability
-                     * to add an image for the recipe, but for now
-                     * it's just the chef
-                     */
-                    /**
-                     * This is where we would add the ability
-                     * to add an image for the recipe, but for now
-                     * it's just the chef
-                     */
-                    onClick = {
-                        /*TODO*/
-                    }
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.temp_recipe_image),
-                        contentDescription = "Recipe Image",
-                        contentScale = ContentScale.FillWidth,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
-                }
-                AddRecipeInput(
-                    label = R.string.recipe_origin,
-                    value = originInput,
-                    onValueChanged = { originInput = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
-                    ),
-                    modifier = Modifier
-                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                        .fillMaxWidth()
-                )
-                AddRecipeInput(
-                    label = R.string.dish_type,
-                    value = dishTypeInput,
-                    onValueChanged = { dishTypeInput = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
-                    ),
-                    modifier = Modifier
-                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                        .fillMaxWidth()
-                )
-                AddRecipeInput(
-                    label = R.string.recipe_description,
-                    value = descriptionInput,
-                    onValueChanged = { descriptionInput = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
-                    ),
-                    singleLine = false,
-                    modifier = Modifier
-                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                        .fillMaxWidth()
-                )
-                val sheetState = rememberModalBottomSheetState()
-                var showBottomSheet by remember { mutableStateOf(false) }
-                var possibleIngredients =  ArrayList<Ingredient>(dbValues.ingredients)
-                var ingredientsList = remember{ArrayList<Triple<Ingredient, Measurement, String>>()}
-                var measureList = ArrayList<Measurement>(dbValues.measurements)
+            }
+            AddRecipeInput(
+                label = R.string.recipe_origin,
+                value = originInput,
+                onValueChanged = { originInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
+                    .fillMaxWidth()
+            )
+            AddRecipeInput(
+                label = R.string.dish_type,
+                value = dishTypeInput,
+                onValueChanged = { dishTypeInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            )
+            AddRecipeInput(
+                label = R.string.recipe_description,
+                value = descriptionInput,
+                onValueChanged = { descriptionInput = it },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                singleLine = false,
+                modifier = Modifier
+                    // .height(200.dp)
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            )
+            val sheetState = rememberModalBottomSheetState()
+            var showBottomSheet by remember { mutableStateOf(false) }
+            var possibleIngredients = ArrayList<Ingredient>(dbValues.ingredients)
+            var ingredientsList = ArrayList<Triple<Ingredient, Measurement, String>>()
+            var measureList = ArrayList<Measurement>(dbValues.measurements)
+            var curIngredient: Ingredient? = null
+            dbValues.measurements
 
-                Button(
-                    /**
-                     * Button that goes to the adding ingredients view
-                     */
-                    onClick = {
-                        showBottomSheet = true
-                    }, modifier = Modifier
-                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Add Ingredients"
-                    )
-                }
-
-                if (showBottomSheet) {
-                    ModalBottomSheet(
-                        onDismissRequest = {
-                            showBottomSheet = false
-                        },
-                        sheetState = sheetState
-                    ) {
-                        // Sheet content
-                        //List all ingredients from database
-                        Box(modifier = Modifier.background(Color.LightGray)) {
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxHeight(0.9f)
-                            ) {
-                                items(items = possibleIngredients, itemContent = { item ->
-                                    Log.d("COMPOSE", "This get rendered $item")
-                                    when (item) {
-                                        item -> {
-                                            item.name?.let {
-                                                Text(text = it,
-                                                    style = TextStyle(fontSize = 20.sp),
-                                                    textAlign = TextAlign.Center,
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(top = dimensionResource(R.dimen.padding_small))
-                                                        .padding(bottom = dimensionResource(R.dimen.padding_small))
-                                                        .clickable {
-                                                            openDialog.value = true
-                                                            curIngredient = item
-                                                        }
-                                                )
-                                            }
-                                        }
-
-                                        else -> {
-                                            item.name?.let {
-                                                Text(
-                                                    text = it,
-                                                    style = TextStyle(fontSize = 20.sp)
-                                                )
-                                            }
-                                        }
-                                    }
-                                })
+            LazyColumn(
+                state = rememberLazyListState(),
+                modifier = Modifier.height((ingredientsList.size * 40).dp)
+            ) {
+                items(items = ingredientsList, itemContent = {item->
+                    when(item) {
+                        item->{
+                            Card(){
+                                item.first.name?.let {
+                                    Text(
+                                        text = it
+                                    )
+                                }
+                                item.second.name?.let {
+                                    Text(
+                                        text = it
+                                    )
+                                }
+                                Text(
+                                    text = item.third
+                                )
                             }
                         }
-                        Button(modifier = Modifier
-                            .fillMaxWidth(),
-                            onClick = {
-                                //TODO Create ingredient
-                            }) {
-                            Text("Create Ingredients")
-                        }
                     }
-                }
-                //Dialog code
-                if (openDialog.value) {
-                    Dialog(onDismissRequest = { openDialog.value = false }) {
-                        Card(
+
+
+                })
+            }
+
+            Button(
+                /**
+                 * Button that goes to the adding ingredients view
+                 */
+                onClick = {
+                    showBottomSheet = true
+                }, modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Add Ingredients"
+                )
+            }
+
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState
+                ) {
+                    // Sheet content
+                    //List all ingredients from database
+                    Button(modifier = Modifier
+                        .fillMaxWidth(),
+                        onClick = {
+                            //createIngredient()
+                        }) {
+                        Text("Create Ingredient")
+                    }
+                    Box(modifier = Modifier.background(Color.LightGray)) {
+                        LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(dimensionResource(R.dimen.measurment_dialog)),
@@ -367,6 +333,15 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                                             )
                                         }
                                     }
+
+                                    else -> {
+                                        item.name?.let {
+                                            Text(
+                                                text = it,
+                                                style = TextStyle(fontSize = 80.sp)
+                                            )
+                                        }
+                                    }
                                 }
                             }
                             Row(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
@@ -395,7 +370,6 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                     }
 
                 }
-
                 RecipeInstructions(
                     instructionList = instructionList,
                     modifier = Modifier
@@ -466,7 +440,109 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
-                    )
+                            .height(250.dp),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        var text by remember { mutableStateOf("Enter Value") }
+
+                        TextField(
+                            value = text,
+                            colors = TextFieldDefaults.colors(
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.DarkGray
+                            ),
+                            onValueChange = { text = it },
+                            label = { Text(stringResource(id = R.string.value_of_measurment)) },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Next
+                            )
+                        )
+
+                        val context = LocalContext.current
+                        var expanded by remember { mutableStateOf(false) }
+                        var selectedText by remember { mutableStateOf(measureList[0]) }
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp)
+                        ) {
+                            ExposedDropdownMenuBox(
+                                expanded = expanded,
+                                onExpandedChange = {
+                                    expanded = !expanded
+                                }
+                            ) {
+                                selectedText.name?.let {
+                                    TextField(
+                                        value = it,
+                                        colors = TextFieldDefaults.colors(
+                                            focusedTextColor = Color.Black,
+                                            unfocusedTextColor = Color.DarkGray
+                                        ),
+                                        onValueChange = {},
+                                        readOnly = true,
+                                        trailingIcon = {
+                                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                                expanded = expanded
+                                            )
+                                        },
+                                        modifier = Modifier.menuAnchor()
+                                    )
+                                }
+
+                                ExposedDropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    measureList.forEach { item ->
+                                        DropdownMenuItem(
+                                            text = {
+                                                item.name?.let {
+                                                    Text(
+                                                        text = it,
+                                                        color = Color.Black
+                                                    )
+                                                }
+                                            },
+                                            onClick = {
+                                                selectedText = item
+                                                expanded = false
+                                                Toast.makeText(
+                                                    context,
+                                                    item.name,
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        Row(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
+                            Spacer(Modifier.weight(1f))
+                            Button(
+                                onClick = { openDialog.value = false },
+                            ) {
+                                Text("Cancel")
+                            }
+                            Button(
+                                onClick = {
+                                    /* Add ingredient to list */
+                                    //text = value
+                                    //selectedText = measurement
+                                    //curIngredient = ingredient
+                                    val newIngredient = Triple(curIngredient, selectedText, text)
+                                    ingredientsList.add(newIngredient as Triple<Ingredient, Measurement, String>)
+                                    openDialog.value = false
+                                },
+                            ) {
+                                Text("Add Ingredient")
+                            }
+                        }
+                    }
                 }
                 Row(
                     modifier = Modifier
@@ -529,6 +605,60 @@ fun AddingView(dbViewModel: DatabaseViewModel) {
     }
 }
 
+//function for creating ingredient
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun createIngredient() {
+//    val openDialog = remember { mutableStateOf(false) }
+//    if (openDialog.value) {
+//        Dialog(onDismissRequest = { openDialog.value = false }) {
+//            Card(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(250.dp),
+//                shape = RoundedCornerShape(16.dp),
+//            ) {
+//                var text by remember { mutableStateOf("Enter Value") }
+//
+//                TextField(
+//                    value = text,
+//                    colors = TextFieldDefaults.colors(
+//                        focusedTextColor = Color.Black,
+//                        unfocusedTextColor = Color.DarkGray
+//                    ),
+//                    onValueChange = { text = it },
+//                    label = { Text(stringResource(id = R.string.value_of_measurment)) },
+//                    keyboardOptions = KeyboardOptions.Default.copy(
+//                        keyboardType = KeyboardType.Number,
+//                        imeAction = ImeAction.Next
+//                    )
+//                )
+//
+//                Row(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
+//                    Spacer(Modifier.weight(1f))
+//                    Button(
+//                        onClick = { openDialog.value = false },
+//                    ) {
+//                        Text("Cancel")
+//                    }
+//                    Button(
+//                        onClick = {
+//                            /* Add ingredient to list */
+//                            //text = value
+//                            //selectedText = measurement
+//                            //curIngredient = ingredient
+//                            val newIngredient = Triple(curIngredient, selectedText, text)
+//                            ingredientsList.add(newIngredient as Triple<Ingredient, Measurement, String>)
+//                            openDialog.value = false
+//                        },
+//                    ) {
+//                        Text("Add Ingredient")
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -663,6 +793,7 @@ fun RecipeInstructions(
         )
     }
 }
+
 @Composable
 fun EditInstructionDialog(
     onDismissRequest: () -> Unit,
@@ -842,5 +973,37 @@ fun AddRecipeInput(
         label = { Text(stringResource(label)) },
         keyboardOptions = keyboardOptions,
         modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchView(
+    input: String,
+    placeHolder: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier
+) {
+    TextField(
+        value = input,
+        onValueChange = onValueChange,
+        modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+            .clip(RoundedCornerShape(30.dp))
+            .border(2.dp, Color.DarkGray, RoundedCornerShape(30.dp)),
+        placeholder = {
+            Text(text = placeHolder)
+        },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
+        ),
+        maxLines = 1,
+        singleLine = true,
+        textStyle = TextStyle(
+            color = Color.Black, fontSize = 20.sp
+        )
     )
 }
