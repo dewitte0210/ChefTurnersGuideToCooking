@@ -3,7 +3,6 @@ package com.example.chefturnersguidetocooking
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,8 +21,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,17 +63,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.chefturnersguidetocooking.data.ExamplesDataProvider
-import com.example.chefturnersguidetocooking.model.Recipes
-import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
-import com.example.chefturnersguidetocooking.RecipeContentType
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import com.example.chefturnersguidetocooking.RecipeViewModel
-import androidx.navigation.compose.rememberNavController
+import com.example.chefturnersguidetocooking.data.ExamplesDataProvider
 import com.example.chefturnersguidetocooking.database.DatabaseViewModel
 import com.example.chefturnersguidetocooking.database.Recipe
 import com.example.chefturnersguidetocooking.database.SingleRecipeAllInfo
+import com.example.chefturnersguidetocooking.model.Recipes
+import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
+
 import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
 
 
@@ -216,6 +216,8 @@ fun BottomNavigation(
         color = md_theme_light_primary,
         contentColor = contentColorFor(md_theme_light_primary),
         modifier = modifier
+            .fillMaxWidth()
+            .height(72.dp) // Increase the height to 72.dp or any value you prefer
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -241,23 +243,38 @@ fun BottomNavigationItem(
     item: BottomNavigationItem,
     onClick: () -> Unit
 ) {
-    // Customize this based on your UI design
-    Text(
-        text = item.label,
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-    )
+
+    item.icon(onClick)
 }
 
+sealed class BottomNavigationItem(val route: String, val icon: @Composable (onClick: () -> Unit) -> Unit) {
+    object Home : BottomNavigationItem("home", { onClick ->
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.size(46.dp) // Increase the size of the icon
+        ) {
+            Icon(Icons.Filled.Home, contentDescription = "Home")
+        }
+    })
 
-sealed class BottomNavigationItem(val route: String, val label: String) {
-    object Home : BottomNavigationItem("home", "Home")
-    object AddRecipes : BottomNavigationItem("add_recipes", "Add Recipes")
-    object Favorites : BottomNavigationItem("favorites", "Favorites")
+    object AddRecipes : BottomNavigationItem("add_recipes", { onClick ->
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.size(46.dp) // Increase the size of the icon
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = "Add Recipes")
+        }
+    })
 
+    object Favorites : BottomNavigationItem("favorites", { onClick ->
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.size(46.dp) // Increase the size of the icon
+        ) {
+            Icon(Icons.Filled.Favorite, contentDescription = "Favorites")
+        }
+    })
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

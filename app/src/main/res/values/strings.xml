@@ -43,4 +43,5 @@
     <string name="cook_time">Cook Time</string>
     <string name="dish_type">Dish Type</string>
     <string name="value_of_measurment">Value of Measurment</string>
+    <string name="noNameDefault">N/A</string>
 </resources>
