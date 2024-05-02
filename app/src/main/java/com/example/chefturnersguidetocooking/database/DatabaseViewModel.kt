@@ -119,7 +119,7 @@ class DatabaseViewModel(
            val recipeId = dbRepository.insertRecipe(recipe)
            ingrMeasurements.forEach{triple ->
                var ingredientID: Long = -1
-               _dbState.value.ingredients.forEach{ingredient ->
+               dbState.value.ingredients.forEach{ingredient ->
                    if(triple.first.name == ingredient.name){
                        ingredientID = ingredient.iid
                    }
