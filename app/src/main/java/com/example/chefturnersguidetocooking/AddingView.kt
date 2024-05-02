@@ -231,7 +231,6 @@ fun AddingView() {
                                     item -> {
                                         Box(
                                             modifier = Modifier
-                                                .fillMaxWidth()
                                             .fillMaxWidth()
                                             .padding(bottom = 16.dp)
                                             .clickable {
