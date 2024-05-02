@@ -309,6 +309,7 @@ fun AddingView() {
             Text(
                 text = "Nutrition Facts (per serving)",
                 fontWeight = FontWeight.Bold,
+
                 modifier = Modifier
             )
             Row(
@@ -401,7 +402,6 @@ fun RecipeInstructions(
 
     Text(
         text = stringResource(R.string.recipe_instructions),
-        color = Color.White,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         modifier = modifier
