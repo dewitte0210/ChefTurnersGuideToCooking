@@ -77,6 +77,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.chefturnersguidetocooking.database.DatabaseViewModel
 import com.example.chefturnersguidetocooking.database.Recipe
 import com.example.chefturnersguidetocooking.database.SingleRecipeAllInfo
+import com.example.chefturnersguidetocooking.database.DatabaseViewModel
+import com.example.chefturnersguidetocooking.database.Recipe
+import com.example.chefturnersguidetocooking.database.SingleRecipeAllInfo
+import com.example.chefturnersguidetocooking.model.Recipes
+import com.example.chefturnersguidetocooking.ui.theme.RecipeTheme
+
 import com.example.chefturnersguidetocooking.ui.theme.md_theme_light_primary
 
 

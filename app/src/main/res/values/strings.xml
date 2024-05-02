@@ -44,9 +44,10 @@
     <string name="cook_time_text">Cook Time: </string>
     <string name="total_time_text">Total Time: </string>
     <string name="add_a_new_recipe">Add a New Recipe</string>
-    <string name="noNameDefault">N/A</string>
     <string name="prep_time">Prep Time</string>
     <string name="servings">Servings</string>
     <string name="cook_time">Cook Time</string>
     <string name="dish_type">Dish Type</string>
+    <string name="value_of_measurment">Value of Measurment</string>
+    <string name="noNameDefault">N/A</string>
 </resources>
