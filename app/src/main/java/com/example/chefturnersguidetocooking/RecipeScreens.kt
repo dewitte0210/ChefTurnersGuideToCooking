@@ -323,14 +323,14 @@ private fun RecipeImageItem(recipe: Recipe, modifier: Modifier = Modifier) {
                 painter =  BitmapPainter(recipe.image.asImageBitmap()),
                 contentDescription = null,
                 alignment = Alignment.Center,
-                contentScale = ContentScale.FillWidth
+                contentScale = ContentScale.FillBounds
             )
         } else {
             Image(
                 painter = painterResource(R.drawable.chef),
                 contentDescription = null,
                 alignment = Alignment.Center,
-                contentScale = ContentScale.FillWidth
+                contentScale = ContentScale.FillBounds
             )
         }
     }
