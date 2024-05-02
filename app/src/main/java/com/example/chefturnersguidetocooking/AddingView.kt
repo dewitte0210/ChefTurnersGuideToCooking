@@ -61,6 +61,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -89,6 +90,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.chefturnersguidetocooking.database.DatabaseViewModel
 import com.example.chefturnersguidetocooking.database.Ingredient
 import com.example.chefturnersguidetocooking.database.Measurement
 import com.example.chefturnersguidetocooking.database.RecipeIngredient
@@ -97,8 +99,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddingView() {
-
+fun AddingView(dbViewModel: DatabaseViewModel) {
+    val dbValues = dbViewModel.dbState.collectAsState().value
     var nameInput by remember { mutableStateOf("") }
     var originInput by remember { mutableStateOf("") }
     var descriptionInput by remember { mutableStateOf("") }
@@ -165,13 +167,13 @@ fun AddingView() {
                     /*TODO*/
                 }
             ) {
-                Image(
-                    painter = painterResource(R.drawable.temp_recipe_image),
-                    contentDescription = "Recipe Image",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
+//                Image(
+//                    painter = painterResource(R.drawable.temp_recipe_image),
+//                    contentDescription = "Recipe Image",
+//                    contentScale = ContentScale.FillWidth,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                )
             }
             AddRecipeInput(
                 label = R.string.recipe_origin,
@@ -226,10 +228,12 @@ fun AddingView() {
             val sheetState = rememberModalBottomSheetState()
             val scope = rememberCoroutineScope()
             var showBottomSheet by remember { mutableStateOf(false) }
-            var possibleIngredients = ArrayList<Ingredient>()
+            var possibleIngredients = ArrayList<Ingredient>(dbValues.ingredients)
             var ingredientsList = ArrayList<Triple<Ingredient,Measurement,String>>()
-            var measureList = ArrayList<Measurement>()
+            var measureList = ArrayList<Measurement>(dbValues.measurements)
             var curIngredient = possibleIngredients[0]
+            dbValues.measurements
+
             Button(
                 /**
                  * Button that goes to the adding ingredients view
@@ -826,10 +830,4 @@ fun AddRecipeInput(
         keyboardOptions = keyboardOptions,
         modifier = modifier
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ScreenPreview() {
-    AddingView()
 }

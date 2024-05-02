@@ -31,7 +31,6 @@ abstract class RecipeDatabase() : RoomDatabase() {
                     "recipe_db"
                 )
                     .createFromAsset("database/cooking_db.db")
-
                     .fallbackToDestructiveMigration()
                     .build()
             }
