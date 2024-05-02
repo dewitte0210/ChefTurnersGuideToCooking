@@ -75,6 +75,11 @@ class MainActivity : ComponentActivity() {
                         composable("add_recipes") { AddingView(
                             dbViewModel
                         ) }
+                        composable("add_recipes") {
+                            // Commenting out the adding view due to deprecated method
+                            AddingView(dbViewModel = dbViewModel)
+                             }
+                        composable("favorites") { FavoritesView() }
                     }
                 },
                 bottomBar = {
