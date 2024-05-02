@@ -38,6 +38,11 @@
     <string name="carbs">Carbs</string>
     <string name="fat">Fat</string>
     <string name="protein">Protein</string>
+    <string name="servings_text"> servings</string>
+    <string name="calories_text"> calories</string>
+    <string name="prep_time_text">Prep Time: </string>
+    <string name="cook_time_text">Cook Time: </string>
+    <string name="total_time_text">Total Time: </string>
     <string name="add_a_new_recipe">Add a New Recipe</string>
     <string name="noNameDefault">N/A</string>
 </resources>
