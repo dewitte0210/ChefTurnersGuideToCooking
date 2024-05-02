@@ -94,7 +94,6 @@ fun AddingView() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_medium)),
     ) {
         TopAppBar(
             title = {
